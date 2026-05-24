@@ -19,15 +19,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
 
 
-#rotate-overlay{display:none;position:fixed;inset:0;z-index:99997;background:rgba(10,10,15,.96);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px}
-#rotate-overlay.show-rotate{display:flex}
-#rotate-overlay .ri{font-size:clamp(48px,10vw,72px);animation:rot 2s ease-in-out infinite}
-#rotate-overlay p{font-size:clamp(14px,2.5vw,18px);opacity:.85;letter-spacing:1px;text-align:center;padding:0 20px}
-#rotate-dismiss{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:clamp(12px,2vw,15px);padding:.6em 2em;border-radius:30px;cursor:pointer;transition:background .2s}
-#rotate-dismiss:hover{background:rgba(255,255,255,.28)}
-@keyframes rot{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
-
-
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
 #notice-box{background:#fff;border-radius:16px;padding:clamp(20px,4%,38px) clamp(22px,5%,44px);max-width:min(520px,92vw);box-shadow:0 8px 40px rgba(0,0,0,.45);text-align:left}
@@ -41,30 +32,14 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 #bg{position:absolute;inset:0;z-index:0;background:url('pic/bg.png') center/cover no-repeat;transition:opacity .3s}
 #bg.hidden{opacity:0}
-
-#stage {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  flex-shrink: 0;
-  aspect-ratio: 16/9;
-  background: transparent;
+#stage{
+  position:relative;z-index:1;overflow:hidden;flex-shrink:0;
+  width:100%; height:100%;
+  max-width: min(100vw, 100vh * 16 / 9);
+  max-height: min(100vh, 100vw * 9 / 16);
+  aspect-ratio:16/9;
+  background:transparent;
   margin: auto;
-}
-
-
-@media (min-aspect-ratio: 16/9) {
-  #stage {
-    height: 100vh;
-    width: auto;
-  }
-}
-
-@media (max-aspect-ratio: 16/9) {
-  #stage {
-    width: 100vw;
-    height: auto;
-  }
 }
 
 
@@ -73,7 +48,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #roll-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center;}
 #util-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center;}
 #collection-toggle{position:absolute;bottom:4%;right:3%;pointer-events:auto;}
-
 
 .btn-pill{flex-shrink:0;border:none;border-radius:50px;cursor:pointer;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:transform .15s,box-shadow .15s,opacity .15s;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:clamp(10px,1.4vw,17px);padding:clamp(.45em,.7vw,.65em) clamp(.9em,1.6vw,1.9em);}
 .btn-pill:hover:not(:disabled){transform:scale(1.05)}
@@ -129,6 +103,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-4 .char-rarity{color:#c678dd}
 .rarity-5 .char-rarity{color:#ffd700}
 .rarity-6 .char-rarity{color:#ff5555}
+
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold;}
 
 
@@ -137,7 +112,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #gacha-video{
   position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;
   background:#000; opacity: 0; 
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out; 
   transform: translateZ(0); 
   will-change: opacity;
 }
@@ -146,7 +121,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn{position:absolute;top:clamp(8px,3%,20px);left:clamp(8px,3%,20px);z-index:60;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:clamp(10px,1.3vw,15px);padding:.48em 1.4em;border-radius:30px;cursor:pointer;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;user-select:none}
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
-
 
 #summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2%,18px)}
 #summary-layer.active{display:flex}
@@ -172,24 +146,14 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   <div id="loading-text">Đang tải... 0%</div>
 </div>
 
-<div id="rotate-overlay">
-  <div class="ri">📱</div>
-  <p>Xoay ngang màn hình để có trải nghiệm Gacha chân thực nhất!</p>
-  <button id="rotate-dismiss" onclick="dismissRotate()">Chơi dọc</button>
-</div>
-
 <div id="notice-overlay">
   <div id="notice-box">
-    <div id="notice-title">✨ Thông Báo</div>
-    <div id="notice-body">Chào mừng đến với Gacha Roll (Cơ chế Genshin)!
-
-• ROLL X1 — triệu hồi 1 nhân vật
+    <div id="notice-title">Thông Báo</div>
+    <div id="notice-body">• ROLL X1 — triệu hồi 1 nhân vật
 • ROLL X10 — triệu hồi 10, luôn có ≥1 nhân vật 4★
 • Pity 4★: đảm bảo sau mỗi 10 lần
 • Pity 5★: đảm bảo sau mỗi 90 lần
-• 6★: Tỷ lệ bí ẩn, đảm bảo nhận khi sở hữu đủ 6 nhân vật 5★
-
-Chúc bạn may mắn! 🍀</div>
+• 6★: Tỷ lệ bí ẩn, đảm bảo nhận khi sở hữu đủ 6 nhân vật 5★</div>
     <div id="notice-countdown">Có thể bỏ qua sau <span id="cd">5</span>s...</div>
     <button id="notice-skip-btn" onclick="closeNotice()">Bỏ qua ✕</button>
   </div>
@@ -209,6 +173,7 @@ Chúc bạn may mắn! 🍀</div>
 <div id="app">
   <div id="bg"></div>
   <div id="stage">
+
     <div id="roll-layer">
       <div id="left-cluster">
         <div id="roll-buttons">
@@ -257,7 +222,7 @@ Chúc bạn may mắn! 🍀</div>
     </div>
 
     <div id="summary-layer">
-      <div id="summary-title">✨ KẾT QUẢ TRIỆU HỒI</div>
+      <div id="summary-title">✨ KẾT QUẢ ROLL</div>
       <div id="summary-pills"></div>
       <button id="summary-close-btn" onclick="closeSummary()">✕ Đóng</button>
     </div>
@@ -267,7 +232,6 @@ Chúc bạn may mắn! 🍀</div>
 
 <script>
 'use strict';
-
 
 const P_PIC  = 'pic/';
 const P_SFX  = 'sfx/';
@@ -284,13 +248,15 @@ function rollSrc(rar) {
   return P_ROLL + 'a1.mp4';
 }
 
+
 const summarySfx = new Audio(P_SFX + 'sfx1.mp3');
 summarySfx.preload = 'auto';
 
+
 const TOTAL_3  = 37;
-const S4 = 38, N4 = 7;
-const S5 = 45, N5 = 6;
-const ID6 = '51';
+const S4 = 38, N4 = 7;   // 38-44
+const S5 = 45, N5 = 6;   // 45-50
+const ID6 = '51';        // 51.mp4 / 51.png
 const PITY4 = 10, PITY5 = 90, MAX_DUP = 6;
 const IDS_5 = ['45','46','47','48','49','50'];
 const R4 = 0.051, R5 = 0.0111, R6 = 0.005;
@@ -311,6 +277,7 @@ let p4=0, p5=0, rolls=0, owned={}, got6=false;
 })();
 function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6}));}catch(e){}}
 
+
 const BG       = document.getElementById('bg');
 const videoLayer= document.getElementById('video-layer');
 const VID      = document.getElementById('gacha-video');
@@ -322,25 +289,13 @@ const summaryLayer = document.getElementById('summary-layer');
 const summaryPills = document.getElementById('summary-pills');
 
 
+function preloadCoreVideos(){
+  const intros = [rollSrc(3), rollSrc(4), rollSrc(5), rollSrc(6)];
+  intros.forEach(src => fetch(src).catch(()=>{}));
+}
 function preloadSpecificVideo(url){
-  fetch(url, {cache: 'default'}).catch(()=>{});
+  fetch(url).catch(()=>{});
 }
-
-
-let roteDismissed = false;
-function dismissRotate(){
-  roteDismissed = true;
-  document.getElementById('rotate-overlay').classList.remove('show-rotate');
-}
-function chkRotate(){
-  if(roteDismissed) return;
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const isMobile = window.innerWidth < 900 || 'ontouchstart' in window;
-  document.getElementById('rotate-overlay').classList.toggle('show-rotate', isPortrait && isMobile);
-}
-window.addEventListener('resize', chkRotate);
-window.addEventListener('orientationchange', () => setTimeout(chkRotate, 200));
-chkRotate();
 
 
 const loadFill = document.getElementById('loading-bar-fill');
@@ -362,10 +317,6 @@ async function runPreload(){
   await new Promise(r=>setTimeout(r,220));
   document.getElementById('loading-overlay').classList.add('hidden');
   setTimeout(()=>{const o=document.getElementById('loading-overlay');if(o)o.style.display='none';},520);
-  
-
-  calculateNextRolls();
-  
   renderCollection();
 }
 runPreload();
@@ -382,7 +333,9 @@ function closeNotice(){
   tryFS();
   const el=document.getElementById('notice-overlay');
   el.classList.add('hidden');setTimeout(()=>el.style.display='none',400);
+  preloadCoreVideos();
 }
+
 function tryFS(){
   const el=document.documentElement;
   const r=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
@@ -390,70 +343,11 @@ function tryFS(){
 }
 
 
-let nextState1 = null, nextRes1 = null;
-let nextState10 = null, nextRes10 = null;
-
-function _pickOnePure(st) {
-    st.rolls++; st.p4++; st.p5++;
-    if(!st.got6 && IDS_5.every(x => (st.owned[x]||0)>0)){ 
-        st.got6 = true; st.p4 = 0; st.p5 = 0; 
-        return ID6; 
-    }
-    const x = Math.random();
-    if(st.got6 === false && x < R6) { 
-        st.got6 = true; 
-        return ID6; 
-    }
-    if(st.p5 >= PITY5) { st.p5=0; st.p4=0; return r5(); }
-    if(st.p4 >= PITY4) { st.p4=0; return r4(); }
-    if(x < R5) { st.p5=0; st.p4=0; return r5(); }
-    if(x < R5 + R4) { st.p4=0; return r4(); }
-    return r3();
-}
-
-function calculateNextRolls() {
-
-    let st1 = { p4, p5, rolls, got6, owned: JSON.parse(JSON.stringify(owned)) };
-    let r1 = _pickOnePure(st1);
-    st1.owned[r1] = Math.min((st1.owned[r1]||0)+1, MAX_DUP);
-    nextState1 = st1;
-    nextRes1 = r1;
-
-
-    let st10 = { p4, p5, rolls, got6, owned: JSON.parse(JSON.stringify(owned)) };
-    let r10 = [];
-    let has4p = false;
-    for(let i=0; i<10; i++){
-        let id = _pickOnePure(st10);
-        if(rarityOf(id) >= 4) has4p = true;
-        r10.push(id);
-    }
-    if(!has4p){
-        st10.p4 = 0;
-        r10[9] = r4();
-    }
-    r10.forEach(x => st10.owned[x] = Math.min((st10.owned[x]||0)+1, MAX_DUP));
-    nextState10 = st10;
-    nextRes10 = r10;
-
-
-    preloadSpecificVideo(rollSrc(rarityOf(nextRes1)));
-    preloadSpecificVideo(charSrc(nextRes1));
-
-    let top10 = Math.max(...nextRes10.map(rarityOf));
-    preloadSpecificVideo(rollSrc(top10));
-    nextRes10.forEach(id => preloadSpecificVideo(charSrc(id)));
-}
-
-// ── PITY & RESET ──
 function openReset(){document.getElementById('reset-modal').classList.add('visible');}
 function closeReset(){document.getElementById('reset-modal').classList.remove('visible');}
-function doReset(){
-  p4=0; p5=0; rolls=0; owned={}; got6=false; save(); closeReset(); 
-  renderCollection();
-  calculateNextRolls();
-}
+function doReset(){p4=0;p5=0;rolls=0;owned={};got6=false;save();closeReset();renderCollection();}
 document.getElementById('reset-modal').addEventListener('click',function(e){if(e.target===this)closeReset();});
+
 
 function openPity(){
   document.getElementById('pm-total').textContent=rolls;
@@ -467,6 +361,33 @@ function openPity(){
 }
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
 document.getElementById('pity-modal').addEventListener('click',function(e){if(e.target===this)closePity();});
+
+
+function all5(){return IDS_5.every(x=>(owned[x]||0)>0);}
+function r3(){return String(Math.floor(Math.random()*TOTAL_3)+1);}
+function r4(){return String(Math.floor(Math.random()*N4)+S4);}
+function r5(){return String(Math.floor(Math.random()*N5)+S5);}
+
+function pickOne(){
+  rolls++; p4++; p5++;
+  if(!got6 && all5()){ got6=true; p4=0; p5=0; return ID6; }
+  const x = Math.random();
+  if(got6 === false && x < R6) { got6=true; return ID6; }
+  if(p5>=PITY5){ p5=0; p4=0; return r5(); }
+  if(p4>=PITY4){ p4=0; return r4(); }
+  if(x<R5){ p5=0; p4=0; return r5(); }
+  if(x<R5+R4){ p4=0; return r4(); }
+  return r3();
+}
+
+function pick10(){
+  const res=[]; let has4p=false;
+  for(let i=0;i<10;i++){const id=pickOne();if(rarityOf(id)>=4)has4p=true;res.push(id);}
+  if(!has4p){p4=0;res[9]=r4();} 
+  return res;
+}
+
+function addOwned(id){owned[id]=Math.min((owned[id]||0)+1,MAX_DUP);}
 
 
 let phase = 'idle'; 
@@ -487,9 +408,10 @@ function clearH(){
   if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
 }
 
+
 function _load(src, onReady, onEnd, onTick){
   clearH(); 
-  VID.style.opacity = '0'; 
+  VID.style.opacity = '0';
   VID.src = src; 
   VID.currentTime = 0;
   VID.onerror = function(){ clearH(); onReady && onReady(false); };
@@ -537,12 +459,10 @@ function doRoll1(){
   tryFS();
   setBtns(true); r10mode=false; hideBG(); videoLayer.classList.add('active');
 
-  const id = nextRes1;
-  p4 = nextState1.p4; p5 = nextState1.p5; rolls = nextState1.rolls; 
-  got6 = nextState1.got6; owned = nextState1.owned;
-  save();
-
+  const id = pickOne(); addOwned(id); save();
   const rar = rarityOf(id);
+  
+  preloadSpecificVideo(charSrc(id)); 
 
   _load(rollSrc(rar),
     function(ok){
@@ -581,15 +501,13 @@ function doRoll10(){
 
   setBtns(true); r10mode=true; hideBG(); videoLayer.classList.add('active'); videoTap.classList.add('active');
 
-  const res = nextRes10;
-  p4 = nextState10.p4; p5 = nextState10.p5; rolls = nextState10.rolls; 
-  got6 = nextState10.got6; owned = nextState10.owned;
-  save();
+  const res = pick10(); res.forEach(x=>addOwned(x)); save();
   
   r10sorted = [...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
   r10queue  = [...res];
   
   const topRar = rarityOf(r10sorted[0]);
+  preloadSpecificVideo(charSrc(r10queue[0]));
 
   _load(rollSrc(topRar),
     function(ok){
@@ -611,6 +529,7 @@ function r10Next(){
     hideSkip(); phase='idle'; showSummary(r10sorted); return;
   }
   const id=r10queue.shift();
+  if(r10queue.length > 0) preloadSpecificVideo(charSrc(r10queue[0]));
 
   phase='playing'; skipLk=false; hideSkip();
   const list=charFallback(id);
@@ -646,7 +565,7 @@ function handleSkip(){
     hideSkip(); VID.pause();
     VID.onseeked=function(){
       VID.onseeked=null; skipLk=false; phase='skipped'; 
-      VID.style.opacity = '1'; 
+      VID.style.opacity = '1'; // Đảm bảo hiện video sau khi skip
       VID.play().catch(()=>{});
     };
     VID.currentTime=6.5;
@@ -660,9 +579,8 @@ function closeVideo(){
   videoLayer.classList.remove('active'); videoTap.classList.remove('active');
   hideSkip(); showBG(); phase='idle'; skipLk=false; r10mode=false;
   setBtns(false); renderCollection();
-  
-  calculateNextRolls();
 }
+
 
 function showSummary(sorted){
   try {
@@ -699,8 +617,6 @@ function closeSummary(){
   summaryLayer.classList.remove('active');
   showBG(); setBtns(false); phase='idle'; skipLk=false; r10mode=false;
   renderCollection();
-  
-  calculateNextRolls();
 }
 
 
@@ -734,6 +650,7 @@ function toggleCollection(){
   const p=document.getElementById('collection-panel');
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
+
 
 document.addEventListener('touchmove',e=>{ if(!e.target.closest('#col-grid')) e.preventDefault(); },{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
