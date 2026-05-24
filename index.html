@@ -9,7 +9,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
-/* LOADING */
+
 #loading-overlay{position:fixed;inset:0;z-index:99999;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px;transition:opacity .5s,visibility .5s}
 #loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #loading-logo{font-size:clamp(32px,6vw,52px);animation:pulse 1.5s infinite alternate}
@@ -18,7 +18,16 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
 
-/* NOTICE */
+
+#rotate-overlay{display:none;position:fixed;inset:0;z-index:99997;background:rgba(10,10,15,.96);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px}
+#rotate-overlay.show-rotate{display:flex}
+#rotate-overlay .ri{font-size:clamp(48px,10vw,72px);animation:rot 2s ease-in-out infinite}
+#rotate-overlay p{font-size:clamp(14px,2.5vw,18px);opacity:.85;letter-spacing:1px;text-align:center;padding:0 20px}
+#rotate-dismiss{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:clamp(12px,2vw,15px);padding:.6em 2em;border-radius:30px;cursor:pointer;transition:background .2s}
+#rotate-dismiss:hover{background:rgba(255,255,255,.28)}
+@keyframes rot{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
+
+
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
 #notice-box{background:#fff;border-radius:16px;padding:clamp(20px,4%,38px) clamp(22px,5%,44px);max-width:min(520px,92vw);box-shadow:0 8px 40px rgba(0,0,0,.45);text-align:left}
@@ -28,28 +37,44 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #notice-skip-btn:hover{background:#2d2d5e}
 #notice-countdown{margin-top:13px;font-size:clamp(11px,1.3vw,13px);color:#888}
 
-/* APP STAGE CẬP NHẬT: LUÔN HIỂN THỊ ĐỦ 16:9 TRÊN MỌI MÀN HÌNH MÀ KHÔNG BỊ CROP */
+
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 #bg{position:absolute;inset:0;z-index:0;background:url('pic/bg.png') center/cover no-repeat;transition:opacity .3s}
 #bg.hidden{opacity:0}
-#stage{
-  position:relative;z-index:1;overflow:hidden;flex-shrink:0;
-  width:100%; height:100%;
-  max-width: min(100vw, 100vh * 16 / 9);
-  max-height: min(100vh, 100vw * 9 / 16);
-  aspect-ratio:16/9;
-  background:transparent;
+
+#stage {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  flex-shrink: 0;
+  aspect-ratio: 16/9;
+  background: transparent;
   margin: auto;
 }
 
-/* ── ROLL LAYER ── */
+
+@media (min-aspect-ratio: 16/9) {
+  #stage {
+    height: 100vh;
+    width: auto;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  #stage {
+    width: 100vw;
+    height: auto;
+  }
+}
+
+
 #roll-layer{position:absolute;inset:0;z-index:10;pointer-events:none;}
 #left-cluster{position:absolute;bottom:4%;left:3%;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(4px,.6%,8px);pointer-events:auto;}
 #roll-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center;}
 #util-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center;}
 #collection-toggle{position:absolute;bottom:4%;right:3%;pointer-events:auto;}
 
-/* PILL BUTTONS */
+
 .btn-pill{flex-shrink:0;border:none;border-radius:50px;cursor:pointer;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:transform .15s,box-shadow .15s,opacity .15s;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:clamp(10px,1.4vw,17px);padding:clamp(.45em,.7vw,.65em) clamp(.9em,1.6vw,1.9em);}
 .btn-pill:hover:not(:disabled){transform:scale(1.05)}
 .btn-pill:active:not(:disabled){transform:scale(.95)}
@@ -57,13 +82,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #roll-btn{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a0a00;box-shadow:0 4px 18px rgba(255,140,0,.5),0 0 0 2px rgba(255,215,0,.3)}
 #roll10-btn{background:linear-gradient(135deg,#e040fb,#7c4dff);color:#fff;box-shadow:0 4px 18px rgba(156,39,176,.5),0 0 0 2px rgba(224,64,251,.3)}
 
-/* GHOST BUTTONS */
+
 .btn-ghost{flex-shrink:0;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:clamp(9px,1vw,13px);padding:clamp(.4em,.65vw,.55em) clamp(.7em,1vw,1.1em);border-radius:8px;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s;letter-spacing:.3px;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
 .btn-ghost:hover{background:rgba(255,255,255,.18)}
 #reset-btn{border-color:rgba(255,80,80,.5);color:#ff9090}
 #reset-btn:hover{background:rgba(255,60,60,.25)}
 
-/* MODALS */
+
 #reset-modal, #pity-modal{position:absolute;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
 #reset-modal.visible, #pity-modal.visible{display:flex}
 #reset-box{background:linear-gradient(160deg,#1a0505,#2d1010);border:1px solid rgba(255,80,80,.42);border-radius:14px;padding:clamp(18px,3.5%,34px) clamp(20px,4%,42px);max-width:min(400px,88%);text-align:center;color:#fff}
@@ -85,7 +110,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pity-note{margin-top:clamp(8px,1.4%,14px);font-size:clamp(9px,.9vw,11px);opacity:.48;text-align:center;line-height:1.55}
 #pity-close{position:absolute;top:9px;right:12px;background:none;border:none;color:rgba(255,255,255,.48);font-size:20px;cursor:pointer}
 
-/* COLLECTION */
+
 #collection-panel{position:absolute;inset:0;z-index:30;background:rgba(8,6,20,.97);backdrop-filter:blur(10px);display:none;flex-direction:column;padding:2%}
 #collection-panel.visible{display:flex}
 #col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5%}
@@ -104,17 +129,16 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-4 .char-rarity{color:#c678dd}
 .rarity-5 .char-rarity{color:#ffd700}
 .rarity-6 .char-rarity{color:#ff5555}
-
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold;}
 
-/* VIDEO LAYER BỔ SUNG GPU HỖ TRỢ CHỐNG LAG */
+
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
 #video-layer.active{display:flex}
 #gacha-video{
   position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;
   background:#000; opacity: 0; 
-  transition: opacity 0.2s ease-in-out; /* Fade in mềm mại chống nháy hỏng frame đầu */
-  transform: translateZ(0); /* Bật giải mã phần cứng GPU (Hardware Accel) */
+  transition: opacity 0.2s ease-in-out;
+  transform: translateZ(0); 
   will-change: opacity;
 }
 #video-tap{position:absolute;inset:0;z-index:58;cursor:pointer;display:none}
@@ -123,7 +147,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
-/* SUMMARY */
+
 #summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2%,18px)}
 #summary-layer.active{display:flex}
 #summary-title{color:rgba(255,255,255,.6);font-size:clamp(10px,1.2vw,15px);letter-spacing:3px;text-transform:uppercase}
@@ -146,6 +170,12 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   <div id="loading-logo">✨</div>
   <div id="loading-bar-wrap"><div id="loading-bar-fill"></div></div>
   <div id="loading-text">Đang tải... 0%</div>
+</div>
+
+<div id="rotate-overlay">
+  <div class="ri">📱</div>
+  <p>Xoay ngang màn hình để có trải nghiệm Gacha chân thực nhất!</p>
+  <button id="rotate-dismiss" onclick="dismissRotate()">Chơi dọc</button>
 </div>
 
 <div id="notice-overlay">
@@ -179,7 +209,6 @@ Chúc bạn may mắn! 🍀</div>
 <div id="app">
   <div id="bg"></div>
   <div id="stage">
-
     <div id="roll-layer">
       <div id="left-cluster">
         <div id="roll-buttons">
@@ -239,7 +268,7 @@ Chúc bạn may mắn! 🍀</div>
 <script>
 'use strict';
 
-// ── PATH CONFIG ──
+
 const P_PIC  = 'pic/';
 const P_SFX  = 'sfx/';
 const P_ROLL = 'roll/';
@@ -255,15 +284,13 @@ function rollSrc(rar) {
   return P_ROLL + 'a1.mp4';
 }
 
-// ── AUDIO PRELOAD ──
 const summarySfx = new Audio(P_SFX + 'sfx1.mp3');
 summarySfx.preload = 'auto';
 
-// ── GACHA CONFIG ──
 const TOTAL_3  = 37;
-const S4 = 38, N4 = 7;   // 38-44
-const S5 = 45, N5 = 6;   // 45-50
-const ID6 = '51';        // 51.mp4 / 51.png
+const S4 = 38, N4 = 7;
+const S5 = 45, N5 = 6;
+const ID6 = '51';
 const PITY4 = 10, PITY5 = 90, MAX_DUP = 6;
 const IDS_5 = ['45','46','47','48','49','50'];
 const R4 = 0.051, R5 = 0.0111, R6 = 0.005;
@@ -276,7 +303,7 @@ function rarityOf(id){
   return 3;
 }
 
-// ── STATE ──
+
 let p4=0, p5=0, rolls=0, owned={}, got6=false;
 (function load(){
   try{const d=JSON.parse(localStorage.getItem('gv5')||'{}');
@@ -284,7 +311,6 @@ let p4=0, p5=0, rolls=0, owned={}, got6=false;
 })();
 function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6}));}catch(e){}}
 
-// ── DOM ──
 const BG       = document.getElementById('bg');
 const videoLayer= document.getElementById('video-layer');
 const VID      = document.getElementById('gacha-video');
@@ -295,16 +321,28 @@ const roll10Btn= document.getElementById('roll10-btn');
 const summaryLayer = document.getElementById('summary-layer');
 const summaryPills = document.getElementById('summary-pills');
 
-// ── PRELOAD CORE DATA ──
-function preloadCoreVideos(){
-  const intros = [rollSrc(3), rollSrc(4), rollSrc(5), rollSrc(6)];
-  intros.forEach(src => fetch(src).catch(()=>{}));
-}
+
 function preloadSpecificVideo(url){
-  fetch(url).catch(()=>{});
+  fetch(url, {cache: 'default'}).catch(()=>{});
 }
 
-// ── LOADING BÊN NGOÀI ──
+
+let roteDismissed = false;
+function dismissRotate(){
+  roteDismissed = true;
+  document.getElementById('rotate-overlay').classList.remove('show-rotate');
+}
+function chkRotate(){
+  if(roteDismissed) return;
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isMobile = window.innerWidth < 900 || 'ontouchstart' in window;
+  document.getElementById('rotate-overlay').classList.toggle('show-rotate', isPortrait && isMobile);
+}
+window.addEventListener('resize', chkRotate);
+window.addEventListener('orientationchange', () => setTimeout(chkRotate, 200));
+chkRotate();
+
+
 const loadFill = document.getElementById('loading-bar-fill');
 const loadText = document.getElementById('loading-text');
 function setLP(p,m){loadFill.style.width=Math.min(100,p)+'%';loadText.textContent=m||('Đang tải... '+Math.round(p)+'%');}
@@ -324,11 +362,15 @@ async function runPreload(){
   await new Promise(r=>setTimeout(r,220));
   document.getElementById('loading-overlay').classList.add('hidden');
   setTimeout(()=>{const o=document.getElementById('loading-overlay');if(o)o.style.display='none';},520);
+  
+
+  calculateNextRolls();
+  
   renderCollection();
 }
 runPreload();
 
-// ── NOTICE ──
+
 let cdVal=5;
 const cdTimer=setInterval(()=>{
   cdVal--;document.getElementById('cd').textContent=cdVal;
@@ -340,22 +382,79 @@ function closeNotice(){
   tryFS();
   const el=document.getElementById('notice-overlay');
   el.classList.add('hidden');setTimeout(()=>el.style.display='none',400);
-  preloadCoreVideos();
 }
-
 function tryFS(){
   const el=document.documentElement;
   const r=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
   if(r) r.call(el).catch(()=>{});
 }
 
-// ── RESET ──
+
+let nextState1 = null, nextRes1 = null;
+let nextState10 = null, nextRes10 = null;
+
+function _pickOnePure(st) {
+    st.rolls++; st.p4++; st.p5++;
+    if(!st.got6 && IDS_5.every(x => (st.owned[x]||0)>0)){ 
+        st.got6 = true; st.p4 = 0; st.p5 = 0; 
+        return ID6; 
+    }
+    const x = Math.random();
+    if(st.got6 === false && x < R6) { 
+        st.got6 = true; 
+        return ID6; 
+    }
+    if(st.p5 >= PITY5) { st.p5=0; st.p4=0; return r5(); }
+    if(st.p4 >= PITY4) { st.p4=0; return r4(); }
+    if(x < R5) { st.p5=0; st.p4=0; return r5(); }
+    if(x < R5 + R4) { st.p4=0; return r4(); }
+    return r3();
+}
+
+function calculateNextRolls() {
+
+    let st1 = { p4, p5, rolls, got6, owned: JSON.parse(JSON.stringify(owned)) };
+    let r1 = _pickOnePure(st1);
+    st1.owned[r1] = Math.min((st1.owned[r1]||0)+1, MAX_DUP);
+    nextState1 = st1;
+    nextRes1 = r1;
+
+
+    let st10 = { p4, p5, rolls, got6, owned: JSON.parse(JSON.stringify(owned)) };
+    let r10 = [];
+    let has4p = false;
+    for(let i=0; i<10; i++){
+        let id = _pickOnePure(st10);
+        if(rarityOf(id) >= 4) has4p = true;
+        r10.push(id);
+    }
+    if(!has4p){
+        st10.p4 = 0;
+        r10[9] = r4();
+    }
+    r10.forEach(x => st10.owned[x] = Math.min((st10.owned[x]||0)+1, MAX_DUP));
+    nextState10 = st10;
+    nextRes10 = r10;
+
+
+    preloadSpecificVideo(rollSrc(rarityOf(nextRes1)));
+    preloadSpecificVideo(charSrc(nextRes1));
+
+    let top10 = Math.max(...nextRes10.map(rarityOf));
+    preloadSpecificVideo(rollSrc(top10));
+    nextRes10.forEach(id => preloadSpecificVideo(charSrc(id)));
+}
+
+// ── PITY & RESET ──
 function openReset(){document.getElementById('reset-modal').classList.add('visible');}
 function closeReset(){document.getElementById('reset-modal').classList.remove('visible');}
-function doReset(){p4=0;p5=0;rolls=0;owned={};got6=false;save();closeReset();renderCollection();}
+function doReset(){
+  p4=0; p5=0; rolls=0; owned={}; got6=false; save(); closeReset(); 
+  renderCollection();
+  calculateNextRolls();
+}
 document.getElementById('reset-modal').addEventListener('click',function(e){if(e.target===this)closeReset();});
 
-// ── PITY ──
 function openPity(){
   document.getElementById('pm-total').textContent=rolls;
   document.getElementById('pm-p4').textContent=p4+'/'+PITY4;
@@ -369,34 +468,7 @@ function openPity(){
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
 document.getElementById('pity-modal').addEventListener('click',function(e){if(e.target===this)closePity();});
 
-// ── GACHA LOGIC ──
-function all5(){return IDS_5.every(x=>(owned[x]||0)>0);}
-function r3(){return String(Math.floor(Math.random()*TOTAL_3)+1);}
-function r4(){return String(Math.floor(Math.random()*N4)+S4);}
-function r5(){return String(Math.floor(Math.random()*N5)+S5);}
 
-function pickOne(){
-  rolls++; p4++; p5++;
-  if(!got6 && all5()){ got6=true; p4=0; p5=0; return ID6; }
-  const x = Math.random();
-  if(got6 === false && x < R6) { got6=true; return ID6; }
-  if(p5>=PITY5){ p5=0; p4=0; return r5(); }
-  if(p4>=PITY4){ p4=0; return r4(); }
-  if(x<R5){ p5=0; p4=0; return r5(); }
-  if(x<R5+R4){ p4=0; return r4(); }
-  return r3();
-}
-
-function pick10(){
-  const res=[]; let has4p=false;
-  for(let i=0;i<10;i++){const id=pickOne();if(rarityOf(id)>=4)has4p=true;res.push(id);}
-  if(!has4p){p4=0;res[9]=r4();} 
-  return res;
-}
-
-function addOwned(id){owned[id]=Math.min((owned[id]||0)+1,MAX_DUP);}
-
-// ── TỐI ƯU VIDEO ENGINE CHO DI ĐỘNG ──
 let phase = 'idle'; 
 let skipLk = false;
 let skipTimer = null;
@@ -415,10 +487,9 @@ function clearH(){
   if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
 }
 
-// Cấu trúc lại _load để chống "méo hỏng frame đầu"
 function _load(src, onReady, onEnd, onTick){
   clearH(); 
-  VID.style.opacity = '0'; // Giấu video khi đang giải mã MP4
+  VID.style.opacity = '0'; 
   VID.src = src; 
   VID.currentTime = 0;
   VID.onerror = function(){ clearH(); onReady && onReady(false); };
@@ -426,7 +497,6 @@ function _load(src, onReady, onEnd, onTick){
   VID.oncanplay = function(){
     VID.oncanplay = null;
     VID.ontimeupdate = function(){
-      // Chỉ cho hiển thị (Fade in) khi video đã bắt đầu chạy thực sự qua mốc 0.05s
       if(VID.currentTime > 0.05) VID.style.opacity = '1'; 
       if(onTick) onTick(VID.currentTime);
       if(VID.currentTime >= 9.5){ VID.pause(); clearH(); onEnd && onEnd(); }
@@ -461,16 +531,18 @@ function charFallback(id){
   return list;
 }
 
-// ── ROLL X1 ──
+
 function doRoll1(){
   if(phase!=='idle') return;
   tryFS();
   setBtns(true); r10mode=false; hideBG(); videoLayer.classList.add('active');
 
-  const id = pickOne(); addOwned(id); save();
+  const id = nextRes1;
+  p4 = nextState1.p4; p5 = nextState1.p5; rolls = nextState1.rolls; 
+  got6 = nextState1.got6; owned = nextState1.owned;
+  save();
+
   const rar = rarityOf(id);
-  
-  preloadSpecificVideo(charSrc(id)); 
 
   _load(rollSrc(rar),
     function(ok){
@@ -495,7 +567,7 @@ function playChar1(id){
   skipTimer=setTimeout(()=>{ if(phase==='playing') showSkip('▶▶ Skip'); },800);
 }
 
-// ── ROLL X10 ──
+
 function doRoll10(){
   if(phase!=='idle') return;
   tryFS();
@@ -509,13 +581,15 @@ function doRoll10(){
 
   setBtns(true); r10mode=true; hideBG(); videoLayer.classList.add('active'); videoTap.classList.add('active');
 
-  const res = pick10(); res.forEach(x=>addOwned(x)); save();
+  const res = nextRes10;
+  p4 = nextState10.p4; p5 = nextState10.p5; rolls = nextState10.rolls; 
+  got6 = nextState10.got6; owned = nextState10.owned;
+  save();
   
   r10sorted = [...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
   r10queue  = [...res];
   
   const topRar = rarityOf(r10sorted[0]);
-  preloadSpecificVideo(charSrc(r10queue[0]));
 
   _load(rollSrc(topRar),
     function(ok){
@@ -537,7 +611,6 @@ function r10Next(){
     hideSkip(); phase='idle'; showSummary(r10sorted); return;
   }
   const id=r10queue.shift();
-  if(r10queue.length > 0) preloadSpecificVideo(charSrc(r10queue[0]));
 
   phase='playing'; skipLk=false; hideSkip();
   const list=charFallback(id);
@@ -573,7 +646,7 @@ function handleSkip(){
     hideSkip(); VID.pause();
     VID.onseeked=function(){
       VID.onseeked=null; skipLk=false; phase='skipped'; 
-      VID.style.opacity = '1'; // Đảm bảo hiện video sau khi skip
+      VID.style.opacity = '1'; 
       VID.play().catch(()=>{});
     };
     VID.currentTime=6.5;
@@ -587,9 +660,10 @@ function closeVideo(){
   videoLayer.classList.remove('active'); videoTap.classList.remove('active');
   hideSkip(); showBG(); phase='idle'; skipLk=false; r10mode=false;
   setBtns(false); renderCollection();
+  
+  calculateNextRolls();
 }
 
-// ── SUMMARY (Hiện kết quả & Phát sfx1.mp3) ──
 function showSummary(sorted){
   try {
     summarySfx.currentTime = 0;
@@ -625,9 +699,11 @@ function closeSummary(){
   summaryLayer.classList.remove('active');
   showBG(); setBtns(false); phase='idle'; skipLk=false; r10mode=false;
   renderCollection();
+  
+  calculateNextRolls();
 }
 
-// ── COLLECTION ──
+
 function getCharList(){
   const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;
 }
@@ -659,7 +735,6 @@ function toggleCollection(){
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
 
-// ── TOUCH GUARD ──
 document.addEventListener('touchmove',e=>{ if(!e.target.closest('#col-grid')) e.preventDefault(); },{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 </script>
