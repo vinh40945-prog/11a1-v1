@@ -18,15 +18,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
 
-/* ROTATE */
-#rotate-overlay{display:none;position:fixed;inset:0;z-index:99997;background:rgba(10,10,15,.96);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px}
-#rotate-overlay.show-rotate{display:flex}
-#rotate-overlay .ri{font-size:clamp(48px,10vw,72px);animation:rot 2s ease-in-out infinite}
-#rotate-overlay p{font-size:clamp(14px,2.5vw,18px);opacity:.85;letter-spacing:1px;text-align:center;padding:0 20px}
-#rotate-dismiss{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:clamp(12px,2vw,15px);padding:.6em 2em;border-radius:30px;cursor:pointer;transition:background .2s}
-#rotate-dismiss:hover{background:rgba(255,255,255,.28)}
-@keyframes rot{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
-
 /* NOTICE */
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
@@ -37,17 +28,18 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #notice-skip-btn:hover{background:#2d2d5e}
 #notice-countdown{margin-top:13px;font-size:clamp(11px,1.3vw,13px);color:#888}
 
-/* APP STAGE */
+/* APP STAGE CẬP NHẬT: LUÔN HIỂN THỊ ĐỦ 16:9 TRÊN MỌI MÀN HÌNH MÀ KHÔNG BỊ CROP */
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 #bg{position:absolute;inset:0;z-index:0;background:url('pic/bg.png') center/cover no-repeat;transition:opacity .3s}
 #bg.hidden{opacity:0}
 #stage{
   position:relative;z-index:1;overflow:hidden;flex-shrink:0;
-  width:100%;height:100%;
-  max-width:calc(100vh * 16 / 9);
-  max-height:calc(100vw * 9 / 16);
+  width:100%; height:100%;
+  max-width: min(100vw, 100vh * 16 / 9);
+  max-height: min(100vh, 100vw * 9 / 16);
   aspect-ratio:16/9;
   background:transparent;
+  margin: auto;
 }
 
 /* ── ROLL LAYER ── */
@@ -71,7 +63,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #reset-btn{border-color:rgba(255,80,80,.5);color:#ff9090}
 #reset-btn:hover{background:rgba(255,60,60,.25)}
 
-/* RESET & PITY MODALS */
+/* MODALS */
 #reset-modal, #pity-modal{position:absolute;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
 #reset-modal.visible, #pity-modal.visible{display:flex}
 #reset-box{background:linear-gradient(160deg,#1a0505,#2d1010);border:1px solid rgba(255,80,80,.42);border-radius:14px;padding:clamp(18px,3.5%,34px) clamp(20px,4%,42px);max-width:min(400px,88%);text-align:center;color:#fff}
@@ -113,13 +105,18 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-5 .char-rarity{color:#ffd700}
 .rarity-6 .char-rarity{color:#ff5555}
 
-/* FALLBACK IMAGE UI CỦA NHÂN VẬT */
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold;}
 
-/* VIDEO LAYER */
+/* VIDEO LAYER BỔ SUNG GPU HỖ TRỢ CHỐNG LAG */
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
 #video-layer.active{display:flex}
-#gacha-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+#gacha-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;
+  background:#000; opacity: 0; 
+  transition: opacity 0.2s ease-in-out; /* Fade in mềm mại chống nháy hỏng frame đầu */
+  transform: translateZ(0); /* Bật giải mã phần cứng GPU (Hardware Accel) */
+  will-change: opacity;
+}
 #video-tap{position:absolute;inset:0;z-index:58;cursor:pointer;display:none}
 #video-tap.active{display:block}
 #skip-btn{position:absolute;top:clamp(8px,3%,20px);left:clamp(8px,3%,20px);z-index:60;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:clamp(10px,1.3vw,15px);padding:.48em 1.4em;border-radius:30px;cursor:pointer;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;user-select:none}
@@ -149,12 +146,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   <div id="loading-logo">✨</div>
   <div id="loading-bar-wrap"><div id="loading-bar-fill"></div></div>
   <div id="loading-text">Đang tải... 0%</div>
-</div>
-
-<div id="rotate-overlay">
-  <div class="ri">📱</div>
-  <p>Xoay ngang để có trải nghiệm tốt nhất</p>
-  <button id="rotate-dismiss" onclick="dismissRotate()">Chơi dọc (16:9)</button>
 </div>
 
 <div id="notice-overlay">
@@ -265,7 +256,6 @@ function rollSrc(rar) {
 }
 
 // ── AUDIO PRELOAD ──
-// Khai báo sẵn Audio để đảm bảo trình duyệt không chặn khi autoplay
 const summarySfx = new Audio(P_SFX + 'sfx1.mp3');
 summarySfx.preload = 'auto';
 
@@ -353,23 +343,11 @@ function closeNotice(){
   preloadCoreVideos();
 }
 
-// ── FULLSCREEN & ROTATE ──
 function tryFS(){
   const el=document.documentElement;
   const r=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
   if(r) r.call(el).catch(()=>{});
 }
-
-let roteDismissed=false;
-function dismissRotate(){roteDismissed=true;document.getElementById('rotate-overlay').classList.remove('show-rotate');}
-function chkRotate(){
-  if(roteDismissed)return;
-  const p=window.innerHeight>window.innerWidth&&(window.innerWidth<900||'ontouchstart' in window);
-  document.getElementById('rotate-overlay').classList.toggle('show-rotate',p);
-}
-window.addEventListener('resize',chkRotate);
-window.addEventListener('orientationchange',()=>setTimeout(chkRotate,200));
-chkRotate();
 
 // ── RESET ──
 function openReset(){document.getElementById('reset-modal').classList.add('visible');}
@@ -418,7 +396,7 @@ function pick10(){
 
 function addOwned(id){owned[id]=Math.min((owned[id]||0)+1,MAX_DUP);}
 
-// ── VIDEO ENGINE ──
+// ── TỐI ƯU VIDEO ENGINE CHO DI ĐỘNG ──
 let phase = 'idle'; 
 let skipLk = false;
 let skipTimer = null;
@@ -433,16 +411,24 @@ function showBG(){BG.classList.remove('hidden');}
 function hideBG(){BG.classList.add('hidden');}
 
 function clearH(){
-  VID.oncanplay=VID.ontimeupdate=VID.onended=VID.onerror=VID.onseeked=null;
+  VID.oncanplay = VID.ontimeupdate = VID.onended = VID.onerror = VID.onseeked = null;
   if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
 }
 
-function _load(src, onReady, onEnd){
-  clearH(); VID.src = src; VID.currentTime = 0;
+// Cấu trúc lại _load để chống "méo hỏng frame đầu"
+function _load(src, onReady, onEnd, onTick){
+  clearH(); 
+  VID.style.opacity = '0'; // Giấu video khi đang giải mã MP4
+  VID.src = src; 
+  VID.currentTime = 0;
   VID.onerror = function(){ clearH(); onReady && onReady(false); };
+  
   VID.oncanplay = function(){
     VID.oncanplay = null;
     VID.ontimeupdate = function(){
+      // Chỉ cho hiển thị (Fade in) khi video đã bắt đầu chạy thực sự qua mốc 0.05s
+      if(VID.currentTime > 0.05) VID.style.opacity = '1'; 
+      if(onTick) onTick(VID.currentTime);
       if(VID.currentTime >= 9.5){ VID.pause(); clearH(); onEnd && onEnd(); }
     };
     VID.onended = function(){ clearH(); onEnd && onEnd(); };
@@ -457,7 +443,8 @@ function playWithFallback(srcList, idx, onEnd){
     function(ok){
       if(!ok){ playWithFallback(srcList, idx+1, onEnd); return; }
       phase = 'playing'; VID.play().catch(()=>{});
-    }, onEnd
+    }, 
+    onEnd, null
   );
 }
 
@@ -492,19 +479,11 @@ function doRoll1(){
         skipTimer=setTimeout(()=>{ if(phase==='playing') showSkip('▶▶ Skip'); },800);
       } else { playChar1(id); }
     },
-    function(){ hideSkip(); skipLk=false; playChar1(id); }
+    function(){ hideSkip(); skipLk=false; playChar1(id); },
+    function(t){
+      if(t >= 6.5 && phase === 'playing') { hideSkip(); skipLk=false; phase='skipped'; }
+    }
   );
-
-  const _origOnCanplay = VID.oncanplay;
-  const _patchedCanplay = function(){
-    if(_origOnCanplay) _origOnCanplay.call(VID);
-    const _orig = VID.ontimeupdate;
-    VID.ontimeupdate = function(){
-      if(VID.currentTime>=6.5 && phase==='playing'){ hideSkip(); skipLk=false; phase='skipped'; }
-      if(_orig) _orig.call(VID);
-    };
-  };
-  if(VID.oncanplay) VID.oncanplay = _patchedCanplay;
 }
 
 function playChar1(id){
@@ -521,13 +500,10 @@ function doRoll10(){
   if(phase!=='idle') return;
   tryFS();
   
-  // Trick: Đánh thức AudioContext khi click bằng cách bật tắt nhanh
   try {
       summarySfx.volume = 0; 
       summarySfx.play().then(() => { 
-          summarySfx.pause(); 
-          summarySfx.currentTime = 0; 
-          summarySfx.volume = 1; 
+          summarySfx.pause(); summarySfx.currentTime = 0; summarySfx.volume = 1; 
       }).catch(()=>{});
   } catch(e) {}
 
@@ -535,16 +511,10 @@ function doRoll10(){
 
   const res = pick10(); res.forEach(x=>addOwned(x)); save();
   
-  // Danh sách đã xếp hạng để chiếu bảng KẾT QUẢ TRIỆU HỒI
-  const sorted = [...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
-  r10sorted = sorted;
-  
-  // Danh sách giữ nguyên thứ tự Random gốc để chiếu tuần tự từng video nhân vật
+  r10sorted = [...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
   r10queue  = [...res];
   
-  // Vẫn lấy phẩm chất cao nhất để bật video intro Roll
-  const topRar = rarityOf(sorted[0]);
-  
+  const topRar = rarityOf(r10sorted[0]);
   preloadSpecificVideo(charSrc(r10queue[0]));
 
   _load(rollSrc(topRar),
@@ -552,14 +522,12 @@ function doRoll10(){
       if(ok){
         phase='playing'; VID.play().catch(()=>{});
         skipTimer=setTimeout(()=>{ if(phase==='playing') showSkip('▶▶ Skip All'); },800);
-        const origT=VID.ontimeupdate;
-        VID.ontimeupdate=function(){
-          if(VID.currentTime>=6.5&&phase==='playing'){hideSkip();phase='skipped';}
-          if(origT) origT.call(VID);
-        };
       } else { hideSkip(); phase='idle'; r10Next(); }
     },
-    function(){ hideSkip(); skipLk=false; phase='idle'; r10Next(); }
+    function(){ hideSkip(); skipLk=false; phase='idle'; r10Next(); },
+    function(t){
+      if(t >= 6.5 && phase === 'playing') { hideSkip(); phase='skipped'; }
+    }
   );
 }
 
@@ -604,7 +572,9 @@ function handleSkip(){
     skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
     hideSkip(); VID.pause();
     VID.onseeked=function(){
-      VID.onseeked=null; skipLk=false; phase='skipped'; VID.play().catch(()=>{});
+      VID.onseeked=null; skipLk=false; phase='skipped'; 
+      VID.style.opacity = '1'; // Đảm bảo hiện video sau khi skip
+      VID.play().catch(()=>{});
     };
     VID.currentTime=6.5;
   } else if(phase==='ended'){
@@ -613,7 +583,7 @@ function handleSkip(){
 }
 
 function closeVideo(){
-  clearH(); VID.pause(); VID.src='';
+  clearH(); VID.pause(); VID.src=''; VID.style.opacity = '0';
   videoLayer.classList.remove('active'); videoTap.classList.remove('active');
   hideSkip(); showBG(); phase='idle'; skipLk=false; r10mode=false;
   setBtns(false); renderCollection();
@@ -657,7 +627,7 @@ function closeSummary(){
   renderCollection();
 }
 
-// ── COLLECTION & FALLBACK ──
+// ── COLLECTION ──
 function getCharList(){
   const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;
 }
