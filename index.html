@@ -116,7 +116,61 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(65px,7.5%,105px),1fr));gap:clamp(4px,.65%,9px);overflow-y:auto;flex:1;padding-right:4px}
 #col-grid::-webkit-scrollbar{width:3px}
 #col-grid::-webkit-scrollbar-thumb{background:rgba(255,215,0,.32);border-radius:2px}
-.char-card{background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.1);padding:5px;display:flex;flex-direction:column;align-items:center;position:relative}
+.char-card{background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.1);padding:5px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.char-card:hover{transform:scale(1.06);box-shadow:0 4px 18px rgba(0,0,0,.5)}
+.char-card.owned:hover{border-color:rgba(255,215,0,.9);box-shadow:0 4px 20px rgba(255,215,0,.3)}
+
+/* CHAR VIEWER MODAL */
+#char-viewer{
+  position:absolute;inset:0;z-index:90;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0);
+  transition:background .3s;
+}
+#char-viewer.open{display:flex;background:rgba(0,0,0,.82)}
+#cv-inner{
+  position:relative;
+  width:min(78%,calc(78vh*16/9));
+  opacity:0;transform:scale(.82) translateY(24px);
+  transition:opacity .32s cubic-bezier(.22,.68,0,1.15),transform .32s cubic-bezier(.22,.68,0,1.15);
+}
+#char-viewer.open #cv-inner{opacity:1;transform:scale(1) translateY(0)}
+
+/* glow ring by rarity */
+#cv-inner.glow-3{box-shadow:0 0 0 2px #7080a0,0 0 28px rgba(112,128,160,.4)}
+#cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
+#cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
+#cv-inner.glow-6{box-shadow:0 0 0 2px #ff4444,0 0 52px rgba(255,68,68,.7)}
+#cv-inner{border-radius:12px;overflow:hidden}
+
+#cv-video{
+  width:100%;aspect-ratio:16/9;display:block;
+  background:#000;object-fit:contain;
+}
+#cv-footer{
+  background:rgba(4,2,16,.88);
+  padding:clamp(6px,1.2%,12px) clamp(10px,2%,20px);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;
+}
+#cv-rarity{font-size:clamp(11px,1.3vw,16px);font-weight:800;letter-spacing:1px}
+#cv-count{font-size:clamp(10px,1.1vw,13px);opacity:.7;color:#fff}
+.cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}
+#cv-close{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:clamp(10px,1.1vw,13px);padding:.42em 1.2em;
+  border-radius:20px;cursor:pointer;transition:background .2s;white-space:nowrap;
+}
+#cv-close:hover{background:rgba(255,255,255,.26)}
+/* spinner while video seeks */
+#cv-spinner{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55);pointer-events:none;opacity:0;transition:opacity .15s;
+  font-size:clamp(20px,4%,36px);
+}
+#cv-spinner.show{opacity:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cv-spinner span{display:inline-block;animation:spin .8s linear infinite}
 .char-card.owned{border-color:rgba(255,215,0,.52)}
 .char-card.not-owned{opacity:.27;filter:grayscale(1)}
 .char-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;display:block}
@@ -250,6 +304,19 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
       <!-- video-tap: only enabled during char video, NOT during intro -->
       <div id="video-tap" onclick="onVideoTap()"></div>
       <button id="skip-btn" onclick="handleSkip()">▶▶ Skip</button>
+    </div>
+
+    <!-- CHAR VIEWER -->
+    <div id="char-viewer" onclick="cvClickOutside(event)">
+      <div id="cv-inner">
+        <video id="cv-video" preload="auto" playsinline webkit-playsinline muted></video>
+        <div id="cv-spinner"><span>⟳</span></div>
+        <div id="cv-footer">
+          <span id="cv-rarity"></span>
+          <span id="cv-count"></span>
+          <button id="cv-close" onclick="closeCharViewer()">✕ Đóng</button>
+        </div>
+      </div>
     </div>
 
     <div id="summary-layer">
@@ -721,6 +788,7 @@ function renderCollection(){
     const cnt=owned[id]||0,rar=rarityOf(id);
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
+    div.onclick=function(){ openCharViewer(id); };
     const img=document.createElement('img'); img.src=imgSrc(id); img.alt=id; img.loading='lazy';
     img.onerror=function(){
       this.style.display='none';
@@ -740,7 +808,71 @@ function toggleCollection(){
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
 
-/* ── TOUCH GUARD ── */
+/* ── CHAR VIEWER ── */
+const cvEl    = document.getElementById('char-viewer');
+const cvInner = document.getElementById('cv-inner');
+const cvVideo = document.getElementById('cv-video');
+const cvRar   = document.getElementById('cv-rarity');
+const cvCnt   = document.getElementById('cv-count');
+const cvSpin  = document.getElementById('cv-spinner');
+let cvOpen = false;
+
+function openCharViewer(id){
+  if(cvOpen) return;
+  const cnt = owned[id]||0;
+  if(cnt === 0) return; // chưa sở hữu → không xem được
+  const rar = rarityOf(id);
+
+  // rarity glow
+  cvInner.className = 'glow-'+rar;
+  cvRar.className   = 'cv-r'+rar;
+  cvRar.textContent = '★'.repeat(rar) + ' #' + id;
+  cvCnt.textContent = cnt > 0 ? (cnt > 1 ? '× '+cnt+' lần sở hữu' : '✓ Đã sở hữu') : '🔒 Chưa sở hữu';
+
+  // show modal with animation
+  cvEl.style.display = 'flex';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ cvEl.classList.add('open'); }); });
+  cvOpen = true;
+
+  // load video, seek to last frame (~9.4s) then pause
+  cvSpin.classList.add('show');
+  cvVideo.style.opacity = '0';
+  cvVideo.src = charSrc(id);
+  cvVideo.muted = true;
+  cvVideo.load();
+
+  cvVideo.onerror = function(){
+    cvSpin.classList.remove('show');
+    cvVideo.style.opacity = '0';
+  };
+
+  cvVideo.oncanplay = function(){
+    cvVideo.oncanplay = null;
+    cvVideo.onseeked = function(){
+      cvVideo.onseeked = null;
+      cvSpin.classList.remove('show');
+      cvVideo.style.opacity = '1';
+    };
+    // seek to 9.4s = last frame area
+    cvVideo.currentTime = 9.4;
+  };
+}
+
+function closeCharViewer(){
+  if(!cvOpen) return;
+  cvEl.classList.remove('open');
+  setTimeout(()=>{
+    cvEl.style.display = 'none';
+    cvVideo.pause(); cvVideo.src = '';
+    cvVideo.style.opacity = '0';
+    cvSpin.classList.remove('show');
+    cvOpen = false;
+  }, 320);
+}
+
+function cvClickOutside(e){
+  if(e.target === cvEl) closeCharViewer();
+}
 document.addEventListener('touchmove',e=>{if(!e.target.closest('#col-grid'))e.preventDefault();},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 </script>
