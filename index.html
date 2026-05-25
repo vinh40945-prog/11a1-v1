@@ -172,7 +172,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 @keyframes spin{to{transform:rotate(360deg)}}
 #cv-spinner span{display:inline-block;animation:spin .8s linear infinite}
 .char-card.owned{border-color:rgba(255,215,0,.52)}
-.char-card.not-owned{opacity:.27;filter:grayscale(1)}
+.char-card.not-owned{opacity:.85}
 .char-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;display:block}
 .char-rarity{font-size:clamp(7px,.7vw,10px);font-weight:700;margin-top:3px}
 .char-count{position:absolute;top:3px;right:4px;background:#ffd700;color:#1a0a00;font-size:clamp(7px,.62vw,10px);font-weight:800;border-radius:10px;padding:1px 5px;min-width:15px;text-align:center}
@@ -406,15 +406,15 @@ function preloadVideo(src){
 }
 
 async function runPreload(){
-  /* Step 1 (0–40%): bg + first 8 char images */
+  /* Step 1 (0–40%): bg + first 8 char2 silhouette images */
   const priority=[P_PIC+'bg.png'];
-  for(let i=1;i<=8;i++) priority.push(P_PIC+i+'.png');
+  for(let i=1;i<=8;i++) priority.push('char2/'+i+'b.png');
   let done=0;
   for(const u of priority){await loadImg(u);done++;setLP((done/priority.length)*40);}
 
-  /* Step 2 (40–90%): rest of char images in chunks */
+  /* Step 2 (40–90%): rest of char2 images in chunks */
   const rest=[];
-  for(let i=9;i<=51;i++) rest.push(P_PIC+i+'.png');
+  for(let i=9;i<=51;i++) rest.push('char2/'+i+'b.png');
   let d2=0;
   for(let i=0;i<rest.length;i+=8){
     await Promise.all(rest.slice(i,i+8).map(u=>loadImg(u)));
@@ -422,10 +422,9 @@ async function runPreload(){
     setLP(40+(d2/rest.length)*50,'Tải ảnh... '+Math.round(40+(d2/rest.length)*50)+'%');
   }
 
-  /* Step 3 (90–100%): preload 4 intro videos in background (non-blocking) */
+  /* Step 3 (90–100%): preload 4 intro videos in background */
   setLP(90,'Chuẩn bị video...');
   [3,4,5,6].forEach(r=>preloadVideo(rollSrc(r)));
-  /* Also preload next likely char videos (3★ pool first) */
   for(let i=1;i<=5;i++) preloadVideo(charSrc(String(i)));
 
   setLP(100,'Sẵn sàng!');
@@ -781,6 +780,8 @@ function closeSummary(){
 }
 
 /* ── COLLECTION ── */
+function imgChar2(id){ return 'char2/'+id+'b.png'; }
+
 function getCharList(){const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;}
 function renderCollection(){
   const g=document.getElementById('col-grid'); g.innerHTML='';
@@ -789,14 +790,29 @@ function renderCollection(){
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
     div.onclick=function(){ openCharViewer(id); };
-    const img=document.createElement('img'); img.src=imgSrc(id); img.alt=id; img.loading='lazy';
+
+    const img=document.createElement('img');
+    img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
+
+    // Nếu chưa sở hữu: silhouette đen hoàn toàn
+    if(cnt===0){
+      img.style.cssText='filter:brightness(0);opacity:1;';
+    }
+
     img.onerror=function(){
       this.style.display='none';
       const fb=document.createElement('div');
-      fb.className='pic-fallback'; fb.textContent='ID:'+id;
+      fb.className='pic-fallback';
+      fb.textContent=cnt>0?('ID:'+id):'???';
+      if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
       div.insertBefore(fb,div.firstChild);
     };
-    const rt=document.createElement('div'); rt.className='char-rarity'; rt.textContent='★'.repeat(rar);
+
+    const rt=document.createElement('div'); rt.className='char-rarity';
+    // Chưa sở hữu: ẩn số sao để không lộ rarity
+    rt.textContent=cnt>0?'★'.repeat(rar):'✦';
+    if(cnt===0) rt.style.color='#333';
+
     div.appendChild(img); div.appendChild(rt);
     if(cnt>0){const c=document.createElement('div');c.className='char-count';c.textContent=cnt>1?'x'+cnt:'✓';div.appendChild(c);}
     g.appendChild(div);
