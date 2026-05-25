@@ -340,13 +340,18 @@ function charSrc(id){return P_CHAR+id+'.mp4';}
 function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:4)+'.mp4';}
 
 
-const TOTAL_3=37, S4=38,N4=7, S5=45,N5=6, ID6='51';
+const TOTAL_3=37, S4=38,N4=7, S5=45,N5=6;
+const IDS_6=['51','52']; 
 const PITY4=10,PITY5=90,MAX_DUP=6;
 const IDS_5=['45','46','47','48','49','50'];
-const R4=0.051,R5=0.0111,R6=0.005;
+
+const R4 = 0.08, R5 = 0.02, R6 = 0.005;
+
+function r6(){return IDS_6[Math.floor(Math.random()*IDS_6.length)];}
 
 function rarityOf(id){
-  if(id===ID6)return 6;const n=+id;
+  if(IDS_6.includes(id))return 6;
+  const n=+id;
   if(n>=S5&&n<=50)return 5;if(n>=S4&&n<S5)return 4;return 3;
 }
 
@@ -429,7 +434,7 @@ async function runPreload(){
 
 
   const rest=[];
-  for(let i=9;i<=51;i++) rest.push('char2/'+i+'b.png');
+  for(let i=9;i<=52;i++) rest.push('char2/'+i+'b.png');
   let d2=0;
   for(let i=0;i<rest.length;i+=8){
     await Promise.all(rest.slice(i,i+8).map(u=>loadImg(u)));
@@ -492,11 +497,11 @@ function r5(){return String(Math.floor(Math.random()*N5)+S5);}
 
 function pickOne(){
   rolls++;p4++;p5++;
-  if(!got6&&all5()){got6=true;p4=0;p5=0;return ID6;}
+  if(!got6&&all5()){got6=true;p4=0;p5=0;return r6();} 
   if(p5>=PITY5){p5=0;p4=0;return r5();}
   if(p4>=PITY4){p4=0;return r4();}
   const x=Math.random();
-  if(got6&&x<R6)return ID6;
+  if(got6&&x<R6)return r6();
   if(x<R5){p5=0;p4=0;return r5();}
   if(x<R5+R4){p4=0;return r4();}
   return r3();
@@ -771,7 +776,7 @@ function closeSummary(){
 
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
 
-function getCharList(){const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;}
+function getCharList(){const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(...IDS_6);return l;}
 function renderCollection(){
   const g=document.getElementById('col-grid'); g.innerHTML='';
   getCharList().forEach(id=>{
