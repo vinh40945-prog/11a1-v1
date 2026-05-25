@@ -9,7 +9,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
-/* LOADING */
 #loading-overlay{position:fixed;inset:0;z-index:99999;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px;transition:opacity .5s,visibility .5s}
 #loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #loading-logo{font-size:clamp(32px,6vw,52px);animation:pulse 1.5s infinite alternate}
@@ -18,7 +17,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
 
-/* NOTICE */
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
 #notice-box{background:#fff;border-radius:16px;padding:clamp(20px,4%,38px) clamp(22px,5%,44px);max-width:min(520px,92vw);box-shadow:0 8px 40px rgba(0,0,0,.45);text-align:left}
@@ -28,37 +26,31 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #notice-skip-btn:hover{background:#2d2d5e}
 #notice-countdown{margin-top:13px;font-size:clamp(11px,1.3vw,13px);color:#888}
 
-/* APP wrapper */
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 
-/*
-  BG — PC: fills stage (16:9). Mobile portrait: fills full screen so no crop.
-  On PC the stage IS the full viewport (landscape), so cover on stage works.
-  On mobile portrait the stage is letterboxed (16:9 box narrower than screen height),
-  so we make bg fill the entire #app instead.
-*/
+
 #bg{
   position:absolute;inset:0;z-index:0;
   background:url('pic/bg.png') center/cover no-repeat;
   transition:opacity .3s;
-  /* default: fills #app = full screen, no crop regardless of ratio */
+
 }
 #bg.hidden{opacity:0}
 
-/* Stage: always 16:9, centered */
+
 #stage{
   position:relative;z-index:1;overflow:hidden;flex-shrink:0;
-  /* size set by JS resizeStage() */
+
 }
 
-/* ROLL LAYER */
+
 #roll-layer{position:absolute;inset:0;z-index:10;pointer-events:none}
 #left-cluster{position:absolute;bottom:4%;left:3%;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(4px,.6%,8px);pointer-events:auto}
 #roll-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center}
 #util-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center}
 #collection-toggle{position:absolute;bottom:4%;right:3%;pointer-events:auto}
 
-/* PILL BUTTONS */
+
 .btn-pill{flex-shrink:0;border:none;border-radius:50px;cursor:pointer;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:transform .15s,box-shadow .15s,opacity .15s;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:clamp(10px,1.4vw,17px);padding:clamp(.45em,.7vw,.65em) clamp(.9em,1.6vw,1.9em)}
 .btn-pill:hover:not(:disabled){transform:scale(1.05)}
 .btn-pill:active:not(:disabled){transform:scale(.95)}
@@ -68,13 +60,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #roll10-btn{background:linear-gradient(135deg,#e040fb,#7c4dff);color:#fff;box-shadow:0 4px 18px rgba(156,39,176,.5),0 0 0 2px rgba(224,64,251,.3)}
 #roll10-btn:hover:not(:disabled){box-shadow:0 6px 26px rgba(156,39,176,.7)}
 
-/* GHOST BUTTONS */
+
 .btn-ghost{flex-shrink:0;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:clamp(9px,1vw,13px);padding:clamp(.4em,.65vw,.55em) clamp(.7em,1vw,1.1em);border-radius:8px;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s;letter-spacing:.3px;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 .btn-ghost:hover{background:rgba(255,255,255,.18)}
 #reset-btn{border-color:rgba(255,80,80,.5);color:#ff9090}
 #reset-btn:hover{background:rgba(255,60,60,.25)}
 
-/* small landscape phones */
+
 @media screen and (max-height:400px) and (orientation:landscape){
   #left-cluster{bottom:2%;left:2%}
   .btn-pill{font-size:clamp(9px,1.3vw,13px);padding:.38em .85em}
@@ -82,7 +74,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   #collection-toggle{bottom:2%;right:2%}
 }
 
-/* MODALS */
+
 #reset-modal,#pity-modal{position:absolute;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
 #reset-modal.visible,#pity-modal.visible{display:flex}
 #reset-box{background:linear-gradient(160deg,#1a0505,#2d1010);border:1px solid rgba(255,80,80,.42);border-radius:14px;padding:clamp(18px,3.5%,34px) clamp(20px,4%,42px);max-width:min(400px,88%);text-align:center;color:#fff}
@@ -107,7 +99,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #pity-close{position:absolute;top:9px;right:12px;background:none;border:none;color:rgba(255,255,255,.48);font-size:20px;cursor:pointer}
 #pity-close:hover{color:#fff}
 
-/* COLLECTION */
+
 #collection-panel{position:absolute;inset:0;z-index:30;background:rgba(8,6,20,.97);backdrop-filter:blur(10px);display:none;flex-direction:column;padding:2%}
 #collection-panel.visible{display:flex}
 #col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5%}
@@ -120,7 +112,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .char-card:hover{transform:scale(1.06);box-shadow:0 4px 18px rgba(0,0,0,.5)}
 .char-card.owned:hover{border-color:rgba(255,215,0,.9);box-shadow:0 4px 20px rgba(255,215,0,.3)}
 
-/* CHAR VIEWER MODAL */
+
 #char-viewer{
   position:absolute;inset:0;z-index:90;
   display:none;align-items:center;justify-content:center;
@@ -136,7 +128,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 }
 #char-viewer.open #cv-inner{opacity:1;transform:scale(1) translateY(0)}
 
-/* glow ring by rarity */
+
 #cv-inner.glow-3{box-shadow:0 0 0 2px #7080a0,0 0 28px rgba(112,128,160,.4)}
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
 #cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
@@ -162,7 +154,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   border-radius:20px;cursor:pointer;transition:background .2s;white-space:nowrap;
 }
 #cv-close:hover{background:rgba(255,255,255,.26)}
-/* spinner while video seeks */
+
 #cv-spinner{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.55);pointer-events:none;opacity:0;transition:opacity .15s;
@@ -182,24 +174,21 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-6 .char-rarity{color:#ff5555}
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold}
 
-/* VIDEO */
+
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
 #video-layer.active{display:flex}
 #gacha-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#000;opacity:0;transition:opacity .2s;transform:translateZ(0);will-change:opacity}
 
-/*
-  video-tap: ONLY active during char video phase (not during intro).
-  Controlled entirely by JS — no CSS active class for tap during intro.
-*/
+
 #video-tap{position:absolute;inset:0;z-index:58;cursor:pointer;display:none}
 #video-tap.active{display:block}
 
-/* SKIP BTN */
+
 #skip-btn{position:absolute;top:clamp(8px,3%,20px);left:clamp(8px,3%,20px);z-index:60;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:clamp(10px,1.3vw,15px);padding:.48em 1.4em;border-radius:30px;cursor:pointer;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;user-select:none}
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
-/* SUMMARY */
+
 #summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2%,18px)}
 #summary-layer.active{display:flex}
 #summary-title{color:rgba(255,255,255,.6);font-size:clamp(10px,1.2vw,15px);letter-spacing:3px;text-transform:uppercase}
@@ -218,30 +207,29 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 </head>
 <body>
 
-<!-- LOADING -->
+
 <div id="loading-overlay">
   <div id="loading-logo">✨</div>
   <div id="loading-bar-wrap"><div id="loading-bar-fill"></div></div>
   <div id="loading-text">Đang tải... 0%</div>
 </div>
 
-<!-- NOTICE -->
+
 <div id="notice-overlay">
   <div id="notice-box">
-    <!-- ===== SỬA NỘI DUNG THÔNG BÁO TẠI ĐÂY ===== -->
     <div id="notice-title">Thông Báo</div>
     <div id="notice-body">• ROLL X1 — triệu hồi 1 nhân vật
 • ROLL X10 — triệu hồi 10, luôn có ≥1 nhân vật 4★
 • Pity 4★: đảm bảo sau mỗi 10 lần
 • Pity 5★: đảm bảo sau mỗi 90 lần
 • 6★: Tỷ lệ bí ẩn, đảm bảo nhận khi sở hữu đủ 6 nhân vật 5★</div>
-    <!-- ===== KẾT THÚC THÔNG BÁO ===== -->
+
     <div id="notice-countdown">Có thể bỏ qua sau <span id="cd">5</span>s...</div>
     <button id="notice-skip-btn" onclick="closeNotice()">Bỏ qua ✕</button>
   </div>
 </div>
 
-<!-- RESET MODAL -->
+
 <div id="reset-modal">
   <div id="reset-box">
     <h3>⚠️ Xác nhận Reset</h3>
@@ -253,7 +241,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   </div>
 </div>
 
-<!-- APP -->
+
 <div id="app">
   <div id="bg"></div>
   <div id="stage">
@@ -301,12 +289,10 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 
     <div id="video-layer">
       <video id="gacha-video" preload="auto" playsinline webkit-playsinline></video>
-      <!-- video-tap: only enabled during char video, NOT during intro -->
       <div id="video-tap" onclick="onVideoTap()"></div>
       <button id="skip-btn" onclick="handleSkip()">▶▶ Skip</button>
     </div>
 
-    <!-- CHAR VIEWER -->
     <div id="char-viewer" onclick="cvClickOutside(event)">
       <div id="cv-inner">
         <video id="cv-video" preload="auto" playsinline webkit-playsinline muted></video>
@@ -325,19 +311,19 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
       <button id="summary-close-btn" onclick="closeSummary()">✕ Đóng</button>
     </div>
 
-  </div><!-- /stage -->
-</div><!-- /app -->
+  </div>
+</div>
 
 <script>
 'use strict';
 
-/* ── PATHS ── */
+
 const P_PIC='pic/',P_SFX='sfx/',P_ROLL='roll/',P_CHAR='char/';
 function imgSrc(id){return P_PIC+id+'.png';}
 function charSrc(id){return P_CHAR+id+'.mp4';}
 function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:4)+'.mp4';}
 
-/* ── GACHA CONFIG ── */
+
 const TOTAL_3=37, S4=38,N4=7, S5=45,N5=6, ID6='51';
 const PITY4=10,PITY5=90,MAX_DUP=6;
 const IDS_5=['45','46','47','48','49','50'];
@@ -348,13 +334,13 @@ function rarityOf(id){
   if(n>=S5&&n<=50)return 5;if(n>=S4&&n<S5)return 4;return 3;
 }
 
-/* ── STATE ── */
+
 let p4=0,p5=0,rolls=0,owned={},got6=false;
 (function(){try{const d=JSON.parse(localStorage.getItem('gv5')||'{}');
   p4=d.p4||0;p5=d.p5||0;rolls=d.t||0;owned=d.o||{};got6=d.h||false;}catch(e){}})();
 function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6}));}catch(e){}}
 
-/* ── DOM ── */
+
 const BG=document.getElementById('bg');
 const videoLayer=document.getElementById('video-layer');
 const VID=document.getElementById('gacha-video');
@@ -365,11 +351,11 @@ const roll10Btn=document.getElementById('roll10-btn');
 const summaryLayer=document.getElementById('summary-layer');
 const summaryPills=document.getElementById('summary-pills');
 
-/* ── SFX ── */
+
 const summarySfx=new Audio(P_SFX+'sfx1.mp3');
 summarySfx.preload='auto';
 
-/* ── LAYOUT — 16:9 stage, BG fills full #app ── */
+
 function resizeStage(){
   const s=document.getElementById('stage');
   const vw=window.innerWidth,vh=window.innerHeight;
@@ -379,22 +365,22 @@ function resizeStage(){
 window.addEventListener('resize',resizeStage);
 resizeStage();
 
-/* ── FULLSCREEN ── */
+
 function tryFS(){
   const el=document.documentElement;
   const r=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
   if(r)r.call(el).catch(()=>{});
 }
 
-/* ── LOADING ── */
+
 const loadFill=document.getElementById('loading-bar-fill');
 const loadText=document.getElementById('loading-text');
 function setLP(p,m){loadFill.style.width=Math.min(100,p)+'%';loadText.textContent=m||('Đang tải... '+Math.round(p)+'%');}
 function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(true);i.onerror=()=>r(false);i.src=src;});}
 
-/* Video preload cache: src → 'pending'|'ready'|'error' */
+
 const vidCache={};
-/* Preload a video into a hidden <video> element to prime browser cache */
+
 function preloadVideo(src){
   if(vidCache[src]) return;
   vidCache[src]='pending';
@@ -406,13 +392,13 @@ function preloadVideo(src){
 }
 
 async function runPreload(){
-  /* Step 1 (0–40%): bg + first 8 char2 silhouette images */
+
   const priority=[P_PIC+'bg.png'];
   for(let i=1;i<=8;i++) priority.push('char2/'+i+'b.png');
   let done=0;
   for(const u of priority){await loadImg(u);done++;setLP((done/priority.length)*40);}
 
-  /* Step 2 (40–90%): rest of char2 images in chunks */
+
   const rest=[];
   for(let i=9;i<=51;i++) rest.push('char2/'+i+'b.png');
   let d2=0;
@@ -422,7 +408,7 @@ async function runPreload(){
     setLP(40+(d2/rest.length)*50,'Tải ảnh... '+Math.round(40+(d2/rest.length)*50)+'%');
   }
 
-  /* Step 3 (90–100%): preload 4 intro videos in background */
+
   setLP(90,'Chuẩn bị video...');
   [3,4,5,6].forEach(r=>preloadVideo(rollSrc(r)));
   for(let i=1;i<=5;i++) preloadVideo(charSrc(String(i)));
@@ -435,7 +421,7 @@ async function runPreload(){
 }
 runPreload();
 
-/* ── NOTICE ── */
+
 let cdVal=5;
 const cdT=setInterval(()=>{
   cdVal--;document.getElementById('cd').textContent=cdVal;
@@ -447,11 +433,11 @@ function closeNotice(){
   tryFS();
   const el=document.getElementById('notice-overlay');
   el.classList.add('hidden');setTimeout(()=>el.style.display='none',400);
-  /* Prime more videos after notice closes */
+
   for(let i=6;i<=20;i++) preloadVideo(charSrc(String(i)));
 }
 
-/* ── RESET / PITY ── */
+
 function openReset(){document.getElementById('reset-modal').classList.add('visible');}
 function closeReset(){document.getElementById('reset-modal').classList.remove('visible');}
 function doReset(){p4=0;p5=0;rolls=0;owned={};got6=false;save();closeReset();renderCollection();}
@@ -470,7 +456,7 @@ function openPity(){
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
 document.getElementById('pity-modal').addEventListener('click',function(e){if(e.target===this)closePity();});
 
-/* ── GACHA LOGIC ── */
+
 function all5(){return IDS_5.every(x=>(owned[x]||0)>0);}
 function r3(){return String(Math.floor(Math.random()*TOTAL_3)+1);}
 function r4(){return String(Math.floor(Math.random()*N4)+S4);}
@@ -507,15 +493,7 @@ function charFallback(id){
   return list;
 }
 
-/* ── VIDEO ENGINE ── */
-/*
-  phase:
-    'idle'      — waiting for roll
-    'intro'     — playing roll intro video (aX.mp4) — TAP DISABLED
-    'char'      — playing char video — TAP ENABLED (x10 only)
-    'waiting'   — between chars in x10, brief pause
-    'ended'     — char video finished, showing ✕ Đóng (x1 only)
-*/
+
 let phase='idle',skipLk=false,skipTimer=null;
 let r10mode=false,r10queue=[],r10sorted=[];
 
@@ -530,7 +508,7 @@ function clearH(){
   if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
 }
 
-/* Low-level loader: sets src, calls onReady(ok), onEnd(), onTick(t) */
+
 function _load(src,onReady,onEnd,onTick){
   clearH();
   VID.style.opacity='0';
@@ -549,7 +527,7 @@ function _load(src,onReady,onEnd,onTick){
   VID.load();
 }
 
-/* Play list with fallback on error */
+
 function playWithFallback(srcList,idx,onEnd){
   if(idx>=srcList.length){onEnd&&onEnd();return;}
   _load(srcList[idx],
@@ -561,22 +539,22 @@ function playWithFallback(srcList,idx,onEnd){
   );
 }
 
-/* Preload the next char in queue while current is playing */
+
 function preloadNextInQueue(){
   if(r10queue.length>0) preloadVideo(charSrc(r10queue[0]));
 }
 
-/* ── ROLL X1 ── */
+
 function doRoll1(){
   if(phase!=='idle')return;
   tryFS(); setBtns(true); r10mode=false;
   hideBG(); videoLayer.classList.add('active');
-  videoTap.classList.remove('active'); /* tap DISABLED during intro */
+  videoTap.classList.remove('active'); 
 
   const id=pickOne(); addOwned(id); save();
   const rar=rarityOf(id);
 
-  /* Preload the char video right away so it's ready when intro ends */
+
   preloadVideo(charSrc(id));
 
   phase='intro';
@@ -586,17 +564,15 @@ function doRoll1(){
         VID.play().catch(()=>{});
         skipTimer=setTimeout(()=>{if(phase==='intro')showSkip('▶▶ Skip');},800);
       } else {
-        /* No intro file → go straight to char */
         phase='idle'; playChar1(id);
       }
     },
     function(){
-      /* Intro ended naturally → play char */
       hideSkip(); skipLk=false;
       phase='idle'; playChar1(id);
     },
     function(t){
-      /* Auto-hide skip after 6.5s during intro */
+
       if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;}
     }
   );
@@ -604,7 +580,6 @@ function doRoll1(){
 
 function playChar1(id){
   videoLayer.classList.add('active');
-  /* tap still disabled in x1 mode */
   videoTap.classList.remove('active');
   phase='char'; skipLk=false;
   const list=charFallback(id);
@@ -614,14 +589,13 @@ function playChar1(id){
   skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip');},800);
 }
 
-/* ── ROLL X10 ── */
+
 function doRoll10(){
   if(phase!=='idle')return;
   tryFS(); setBtns(true); r10mode=true;
   hideBG(); videoLayer.classList.add('active');
-  videoTap.classList.remove('active'); /* tap DISABLED during intro */
+  videoTap.classList.remove('active'); 
 
-  /* Unlock sfx context */
   try{summarySfx.volume=0;summarySfx.play().then(()=>{summarySfx.pause();summarySfx.currentTime=0;summarySfx.volume=1;}).catch(()=>{});}catch(e){}
 
   const res=pick10(); res.forEach(x=>addOwned(x)); save();
@@ -630,7 +604,7 @@ function doRoll10(){
 
   const topRar=rarityOf(r10sorted[0]);
 
-  /* Preload first 2 chars immediately */
+
   if(r10queue.length>0)preloadVideo(charSrc(r10queue[0]));
   if(r10queue.length>1)preloadVideo(charSrc(r10queue[1]));
 
@@ -645,9 +619,7 @@ function doRoll10(){
       }
     },
     function(){
-      /* Intro ended → start char sequence */
       hideSkip(); skipLk=false; phase='idle';
-      /* Enable tap now that intro is done */
       videoTap.classList.add('active');
       r10Next();
     },
@@ -665,19 +637,17 @@ function r10Next(){
     showSummary(r10sorted); return;
   }
   const id=r10queue.shift();
-  preloadNextInQueue(); /* preload next while this plays */
+  preloadNextInQueue(); 
 
   phase='char'; skipLk=false; hideSkip();
   const list=charFallback(id);
   playWithFallback(list,0,function(){
-    /* char ended → chờ người dùng chạm, KHÔNG tự động next */
     phase='waiting';
     showSkip('▶▶ Skip All');
   });
   skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip All');},500);
 }
 
-/* Tap on video area (x10 char phase only — tap overlay disabled during intro) */
 function onVideoTap(){
   if(!r10mode)return;
   if(phase==='char'||phase==='waiting'){
@@ -693,7 +663,6 @@ function handleSkip(){
 
   if(phase==='intro'){
     if(r10mode){
-      /* Skip intro → jump straight to summary */
       skipLk=true; clearH(); if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       VID.pause(); r10queue=[];
       videoTap.classList.remove('active');
@@ -701,7 +670,7 @@ function handleSkip(){
       hideSkip(); phase='idle'; skipLk=false;
       showSummary(r10sorted);
     } else {
-      /* Skip intro → seek to 6.5s then let it finish and auto-play char */
+
       skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       hideSkip(); VID.pause();
       VID.onseeked=function(){
@@ -715,7 +684,6 @@ function handleSkip(){
 
   if(phase==='char'||phase==='waiting'){
     if(r10mode){
-      /* x10: ấn Skip → nhảy thẳng sang liệt kê toàn bộ */
       skipLk=true; clearH();
       if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       VID.pause(); r10queue=[];
@@ -724,7 +692,7 @@ function handleSkip(){
       hideSkip(); phase='idle'; skipLk=false;
       showSummary(r10sorted);
     } else {
-      /* x1: seek char video đến 6.5s */
+
       skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       hideSkip(); VID.pause();
       VID.onseeked=function(){
@@ -749,7 +717,7 @@ function closeVideo(){
   setBtns(false); renderCollection();
 }
 
-/* ── SUMMARY ── */
+
 function showSummary(sorted){
   try{summarySfx.currentTime=0;summarySfx.play().catch(()=>{});}catch(e){}
   summaryPills.innerHTML='';
@@ -779,7 +747,7 @@ function closeSummary(){
   renderCollection();
 }
 
-/* ── COLLECTION ── */
+
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
 
 function getCharList(){const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;}
@@ -794,7 +762,7 @@ function renderCollection(){
     const img=document.createElement('img');
     img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
 
-    // Nếu chưa sở hữu: silhouette đen hoàn toàn
+
     if(cnt===0){
       img.style.cssText='filter:brightness(0);opacity:1;';
     }
@@ -809,7 +777,7 @@ function renderCollection(){
     };
 
     const rt=document.createElement('div'); rt.className='char-rarity';
-    // Chưa sở hữu: ẩn số sao để không lộ rarity
+
     rt.textContent=cnt>0?'★'.repeat(rar):'✦';
     if(cnt===0) rt.style.color='#333';
 
@@ -824,7 +792,7 @@ function toggleCollection(){
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
 
-/* ── CHAR VIEWER ── */
+
 const cvEl    = document.getElementById('char-viewer');
 const cvInner = document.getElementById('cv-inner');
 const cvVideo = document.getElementById('cv-video');
@@ -836,21 +804,18 @@ let cvOpen = false;
 function openCharViewer(id){
   if(cvOpen) return;
   const cnt = owned[id]||0;
-  if(cnt === 0) return; // chưa sở hữu → không xem được
+  if(cnt === 0) return; 
   const rar = rarityOf(id);
 
-  // rarity glow
   cvInner.className = 'glow-'+rar;
   cvRar.className   = 'cv-r'+rar;
   cvRar.textContent = '★'.repeat(rar) + ' #' + id;
   cvCnt.textContent = cnt > 0 ? (cnt > 1 ? '× '+cnt+' lần sở hữu' : '✓ Đã sở hữu') : '🔒 Chưa sở hữu';
 
-  // show modal with animation
   cvEl.style.display = 'flex';
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ cvEl.classList.add('open'); }); });
   cvOpen = true;
 
-  // load video, seek to last frame (~9.4s) then pause
   cvSpin.classList.add('show');
   cvVideo.style.opacity = '0';
   cvVideo.src = charSrc(id);
@@ -869,7 +834,6 @@ function openCharViewer(id){
       cvSpin.classList.remove('show');
       cvVideo.style.opacity = '1';
     };
-    // seek to 9.4s = last frame area
     cvVideo.currentTime = 9.4;
   };
 }
