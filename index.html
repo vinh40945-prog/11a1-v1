@@ -9,6 +9,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
+
 #loading-overlay{position:fixed;inset:0;z-index:99999;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px;transition:opacity .5s,visibility .5s}
 #loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #loading-logo{font-size:clamp(32px,6vw,52px);animation:pulse 1.5s infinite alternate}
@@ -16,6 +17,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#e040fb,#ffd700);border-radius:10px;transition:width .15s ease-out}
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
+
 
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
@@ -26,17 +28,20 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #notice-skip-btn:hover{background:#2d2d5e}
 #notice-countdown{margin-top:13px;font-size:clamp(11px,1.3vw,13px);color:#888}
 
+
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 
 
 #bg{
   position:absolute;inset:0;z-index:0;
-  background:url('pic/bg.png') center/cover no-repeat;
+  background:url('pic/bg.png') center center/contain no-repeat;
+  background-color:#000;
   transition:opacity .3s;
-
+}
+@media (orientation:landscape){
+  #bg{ background-size:cover; }
 }
 #bg.hidden{opacity:0}
-
 
 #stage{
   position:relative;z-index:1;overflow:hidden;flex-shrink:0;
@@ -49,7 +54,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #roll-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center}
 #util-buttons{display:flex;flex-direction:row;gap:clamp(4px,.6%,8px);align-items:center}
 #collection-toggle{position:absolute;bottom:4%;right:3%;pointer-events:auto}
-
 
 .btn-pill{flex-shrink:0;border:none;border-radius:50px;cursor:pointer;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:transform .15s,box-shadow .15s,opacity .15s;user-select:none;outline:none;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:clamp(10px,1.4vw,17px);padding:clamp(.45em,.7vw,.65em) clamp(.9em,1.6vw,1.9em)}
 .btn-pill:hover:not(:disabled){transform:scale(1.05)}
@@ -128,7 +132,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 }
 #char-viewer.open #cv-inner{opacity:1;transform:scale(1) translateY(0)}
 
-
 #cv-inner.glow-3{box-shadow:0 0 0 2px #7080a0,0 0 28px rgba(112,128,160,.4)}
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
 #cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
@@ -177,7 +180,19 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
 #video-layer.active{display:flex}
-#gacha-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#000;opacity:0;transition:opacity .2s;transform:translateZ(0);will-change:opacity}
+#gacha-video{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  background:#000;
+  opacity:0;
+  transition:opacity .2s;
+  transform:translateZ(0);
+  will-change:opacity;
+}
 
 
 #video-tap{position:absolute;inset:0;z-index:58;cursor:pointer;display:none}
@@ -187,7 +202,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn{position:absolute;top:clamp(8px,3%,20px);left:clamp(8px,3%,20px);z-index:60;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:clamp(10px,1.3vw,15px);padding:.48em 1.4em;border-radius:30px;cursor:pointer;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;user-select:none}
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
-
 
 #summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2%,18px)}
 #summary-layer.active{display:flex}
@@ -289,9 +303,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 
     <div id="video-layer">
       <video id="gacha-video" preload="auto" playsinline webkit-playsinline></video>
+
       <div id="video-tap" onclick="onVideoTap()"></div>
       <button id="skip-btn" onclick="handleSkip()">▶▶ Skip</button>
     </div>
+
 
     <div id="char-viewer" onclick="cvClickOutside(event)">
       <div id="cv-inner">
@@ -358,11 +374,24 @@ summarySfx.preload='auto';
 
 function resizeStage(){
   const s=document.getElementById('stage');
-  const vw=window.innerWidth,vh=window.innerHeight;
-  if(vw/vh>16/9){s.style.height=vh+'px';s.style.width=(vh*16/9)+'px';}
-  else{s.style.width=vw+'px';s.style.height=(vw*9/16)+'px';}
+
+  const vw = (window.visualViewport ? window.visualViewport.width  : window.innerWidth)  || window.innerWidth;
+  const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) || window.innerHeight;
+  if(vw/vh > 16/9){
+
+    const w = Math.floor(vh * 16/9);
+    s.style.width  = w+'px';
+    s.style.height = vh+'px';
+  } else {
+
+    const h = Math.floor(vw * 9/16);
+    s.style.width  = vw+'px';
+    s.style.height = h+'px';
+  }
 }
-window.addEventListener('resize',resizeStage);
+window.addEventListener('resize', resizeStage);
+if(window.visualViewport) window.visualViewport.addEventListener('resize', resizeStage);
+window.addEventListener('orientationchange', ()=>setTimeout(resizeStage, 150));
 resizeStage();
 
 
@@ -433,7 +462,6 @@ function closeNotice(){
   tryFS();
   const el=document.getElementById('notice-overlay');
   el.classList.add('hidden');setTimeout(()=>el.style.display='none',400);
-
   for(let i=6;i<=20;i++) preloadVideo(charSrc(String(i)));
 }
 
@@ -508,7 +536,6 @@ function clearH(){
   if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
 }
 
-
 function _load(src,onReady,onEnd,onTick){
   clearH();
   VID.style.opacity='0';
@@ -554,7 +581,6 @@ function doRoll1(){
   const id=pickOne(); addOwned(id); save();
   const rar=rarityOf(id);
 
-
   preloadVideo(charSrc(id));
 
   phase='intro';
@@ -572,7 +598,6 @@ function doRoll1(){
       phase='idle'; playChar1(id);
     },
     function(t){
-
       if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;}
     }
   );
@@ -580,6 +605,7 @@ function doRoll1(){
 
 function playChar1(id){
   videoLayer.classList.add('active');
+
   videoTap.classList.remove('active');
   phase='char'; skipLk=false;
   const list=charFallback(id);
@@ -596,14 +622,14 @@ function doRoll10(){
   hideBG(); videoLayer.classList.add('active');
   videoTap.classList.remove('active'); 
 
+
   try{summarySfx.volume=0;summarySfx.play().then(()=>{summarySfx.pause();summarySfx.currentTime=0;summarySfx.volume=1;}).catch(()=>{});}catch(e){}
 
   const res=pick10(); res.forEach(x=>addOwned(x)); save();
   r10sorted=[...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
-  r10queue=[...res]; /* play in original roll order */
+  r10queue=[...res]; 
 
   const topRar=rarityOf(r10sorted[0]);
-
 
   if(r10queue.length>0)preloadVideo(charSrc(r10queue[0]));
   if(r10queue.length>1)preloadVideo(charSrc(r10queue[1]));
@@ -657,7 +683,6 @@ function onVideoTap(){
   }
 }
 
-/* Skip button */
 function handleSkip(){
   if(skipLk)return;
 
@@ -670,7 +695,6 @@ function handleSkip(){
       hideSkip(); phase='idle'; skipLk=false;
       showSummary(r10sorted);
     } else {
-
       skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       hideSkip(); VID.pause();
       VID.onseeked=function(){
@@ -692,7 +716,6 @@ function handleSkip(){
       hideSkip(); phase='idle'; skipLk=false;
       showSummary(r10sorted);
     } else {
-
       skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       hideSkip(); VID.pause();
       VID.onseeked=function(){
@@ -716,7 +739,6 @@ function closeVideo(){
   hideSkip(); showBG(); phase='idle'; skipLk=false; r10mode=false;
   setBtns(false); renderCollection();
 }
-
 
 function showSummary(sorted){
   try{summarySfx.currentTime=0;summarySfx.play().catch(()=>{});}catch(e){}
@@ -747,7 +769,6 @@ function closeSummary(){
   renderCollection();
 }
 
-
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
 
 function getCharList(){const l=[];for(let i=1;i<=50;i++)l.push(String(i));l.push(ID6);return l;}
@@ -761,7 +782,6 @@ function renderCollection(){
 
     const img=document.createElement('img');
     img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
-
 
     if(cnt===0){
       img.style.cssText='filter:brightness(0);opacity:1;';
@@ -777,7 +797,6 @@ function renderCollection(){
     };
 
     const rt=document.createElement('div'); rt.className='char-rarity';
-
     rt.textContent=cnt>0?'★'.repeat(rar):'✦';
     if(cnt===0) rt.style.color='#333';
 
@@ -791,7 +810,6 @@ function toggleCollection(){
   const p=document.getElementById('collection-panel');
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
-
 
 const cvEl    = document.getElementById('char-viewer');
 const cvInner = document.getElementById('cv-inner');
