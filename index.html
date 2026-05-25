@@ -604,12 +604,9 @@ function r10Next(){
   phase='char'; skipLk=false; hideSkip();
   const list=charFallback(id);
   playWithFallback(list,0,function(){
-    /* char ended → brief pause then auto-advance */
+    /* char ended → chờ người dùng chạm, KHÔNG tự động next */
     phase='waiting';
-    showSkip('▶▶ Chạm để tiếp tục');
-    skipTimer=setTimeout(()=>{
-      if(phase==='waiting'){phase='idle';hideSkip();r10Next();}
-    },700);
+    showSkip('▶▶ Skip All');
   });
   skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip All');},500);
 }
