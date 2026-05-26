@@ -493,7 +493,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const P_PIC='pic/',P_SFX='sfx/',P_ROLL='roll/',P_CHAR='char/';
 function imgSrc(id){return P_PIC+id+'.png';}
 function charSrc(id){return P_CHAR+id+'.mp4';}
-function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:4)+'.mp4';}
+function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:r===6?4:5)+'.mp4';}
 
 const CHAR_DATABASE = [];
 
@@ -603,30 +603,33 @@ function setLP(p,m){loadFill.style.width=Math.min(100,p)+'%';loadText.textConten
 function loadImg(src){
     return new Promise(r=>{
         const i=new Image();
-        let settled = false;
-        const finish = (ok) => {
-            if(!settled) { settled = true; r(ok); }
-        };
-        i.onload=()=>finish(true);
-        i.onerror=()=>finish(false);
+        i.onload=()=>r(true);
+        i.onerror=()=>r(false);
         i.src=src;
-        setTimeout(()=>finish(false), 800);
     });
 }
 
 const vidCache={};
-function preloadVideo(src){
-  if(vidCache[src]) return;
-  vidCache[src]='pending';
-  const v=document.createElement('video');
-  v.preload='auto'; v.src=src; v.muted=true;
-  v.oncanplaythrough=()=>{vidCache[src]='ready';};
-  v.onerror=()=>{
-      vidCache[src]='error';
-      const m = src.match(/char\/(.+)\.mp4/);
-      if(m) removeInvalidChar(m[1]);
-  };
-  v.load();
+function preloadVideo(src) {
+    return new Promise(r => {
+        if (vidCache[src]) return r(true);
+        vidCache[src] = 'pending';
+        fetch(src)
+            .then(res => {
+                if (!res.ok) throw new Error();
+                return res.blob();
+            })
+            .then(() => {
+                vidCache[src] = 'ready';
+                r(true);
+            })
+            .catch(() => {
+                vidCache[src] = 'error';
+                const m = src.match(/char\/(.+)\.mp4/);
+                if (m) removeInvalidChar(m[1]);
+                r(false);
+            });
+    });
 }
 
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
@@ -639,34 +642,43 @@ async function runPreload(){
       let checked = 0;
       for (let i = 0; i < allIds.length; i += 10) {
           const chunk = allIds.slice(i, i + 10);
-          await Promise.all(chunk.map(async id => {
-              const ok = await loadImg(imgChar2(id));
+          await Promise.all(chunk.map(id => loadImg(imgChar2(id)).then(ok => {
               if(!ok) removeInvalidChar(id);
-          }));
+          })));
           checked += chunk.length;
           setLP(5 + (checked / allIds.length) * 35, 'Đang kiểm tra... ' + Math.round((checked / allIds.length) * 100) + '%');
       }
 
+      setLP(40, 'Đang tải ảnh...');
       const priority=[P_PIC+'bg.png'];
       const validIds = getCharList();
-      
       validIds.slice(0, 8).forEach(id => priority.push(imgChar2(id)));
       
       let done=0;
-      for(const u of priority){
-          await loadImg(u);
+      await Promise.all(priority.map(u => loadImg(u).then(() => {
           done++;
           setLP(40+(done/priority.length)*20);
-      }
+      })));
 
-      setLP(70,'Chuẩn bị video...');
-      [3,4,5,6].forEach(r=>preloadVideo(rollSrc(r)));
-      validIds.slice(0, 5).forEach(id => preloadVideo(charSrc(id)));
+      setLP(60,'Tải tệp tin hệ thống...');
+      const rollVids = [3,4,5,6,7].map(r => rollSrc(r));
+      done = 0;
+      await Promise.all(rollVids.map(u => preloadVideo(u).then(() => {
+          done++;
+          setLP(60+(done/rollVids.length)*25);
+      })));
+
+      setLP(85,'Chuẩn bị video nhân vật...');
+      const charVids = validIds.slice(0, 5).map(id => charSrc(id));
+      done = 0;
+      await Promise.all(charVids.map(u => preloadVideo(u).then(() => {
+          done++;
+          setLP(85+(done/charVids.length)*15);
+      })));
 
       setLP(100,'Sẵn sàng!');
-      await new Promise(r=>setTimeout(r,220));
+      await new Promise(r=>setTimeout(r,400));
   } catch (e) {
-      console.error("Lỗi:", e);
   } finally {
       document.getElementById('loading-overlay').classList.add('hidden');
       setTimeout(()=>{const o=document.getElementById('loading-overlay');if(o)o.style.display='none';},520);
