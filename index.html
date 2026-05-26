@@ -152,78 +152,159 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
-#summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.94);display:none;flex-direction:column;align-items:center;justify-content:flex-start;gap:clamp(6px,1.5vh,16px);padding:30px 10px;box-sizing:border-box;overflow-y:auto}
-#summary-layer.active{display:flex}
-#summary-title{color:rgba(255,255,255,.6);font-size:clamp(10px,1.3vw,15px);letter-spacing:4px;text-transform:uppercase;text-shadow:0 0 10px rgba(255,255,255,.2);margin-top:auto}
+#summary-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 55;
+  background: rgba(4,2,16,.94);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  gap: clamp(6px, 1.5vh, 16px); 
+  padding: 30px 10px; 
+  box-sizing: border-box;
+  overflow-y: auto; 
+}
+#summary-layer.active { display: flex; }
 
-#summary-pills{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:clamp(4px,1vw,8px);flex-wrap:wrap;width:100%;max-width:650px}
-
-#summary-close-btn{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:clamp(10px,1.2vw,14px);padding:.5em 2.2em;border-radius:30px;cursor:pointer;transition:background .2s,transform .2s;margin-top:10px;margin-bottom:auto;flex-shrink:0}
-#summary-close-btn:hover{background:rgba(255,255,255,.24);transform:scale(1.05)}
-
-.pill-card{flex:0 1 calc(20% - 8px);max-width:90px;display:flex;flex-direction:column;align-items:stretch;border-radius:clamp(6px,2vw,16px);overflow:hidden;border:2px solid rgba(255,255,255,.16);position:relative;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;opacity:0;transform:translateY(40px) scale(.82);transition:opacity .5s cubic-bezier(.175,.885,.32,1.275),transform .5s cubic-bezier(.175,.885,.32,1.275),border-color .25s ease,box-shadow .25s ease}
-.pill-card.show{opacity:1;transform:translateY(0) scale(1)}
-.pill-card:hover{transform:scale(1.08) translateY(-6px);border-color:rgba(255,255,255,.75);z-index:2}
-.pill-card:active{transform:scale(.96) translateY(-2px);transition:transform .1s ease}
-
-.pill-card img,.pill-card .pic-fallback{width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;display:block;transition:transform .3s ease}
-.pill-card:hover img{transform:scale(1.04)}
-
-.pill-rarity{font-size:clamp(6px,1.2vw,10px);font-weight:800;padding:clamp(2px,.8vh,5px) 0;text-align:center;background:rgba(0,0,0,.75);letter-spacing:1px;border-top:1px solid rgba(255,255,255,.05)}
-
-.pill-r3{border-color:#7080a0}
-.pill-r3 .pill-rarity{color:#a0b0d0}
-.pill-r3:hover{box-shadow:0 8px 20px rgba(112,128,160,.5)}
-
-.pill-r4{border-color:#c678dd}
-.pill-r4 .pill-rarity{color:#e090ff}
-.pill-r4:hover{box-shadow:0 10px 25px rgba(198,120,221,.75);border-color:#f1b6ff}
-
-.pill-r5{border-color:#ffd700}
-.pill-r5 .pill-rarity{color:#ffd700}
-.pill-r5:hover{box-shadow:0 12px 32px rgba(255,215,0,.8);border-color:#fff2a3}
-
-.pill-r6{border-color:#ff4444}
-.pill-r6 .pill-rarity{color:#ff6666}
-.pill-r6:hover{box-shadow:0 12px 36px rgba(255,68,68,.9);border-color:#ff9999}
-
-.pill-r7{border-color:#ff00ff}
-.pill-r7 .pill-rarity{color:#ff00ff}
-.pill-r7:hover{box-shadow:0 15px 40px rgba(255,0,255,1);border-color:#ff99ff}
-
-@media screen and (max-height:450px) and (orientation:landscape){
-  .pill-card{flex:0 1 calc(10% - 4px);max-width:60px;border-radius:6px}
-  #summary-pills{gap:4px;max-width:95%}
-  #summary-layer{padding:10px;justify-content:center;gap:6px}
-  #summary-title{font-size:10px;margin-bottom:0;margin-top:0}
-  #summary-close-btn{margin-top:4px;padding:.3em 1.8em;font-size:9px;margin-bottom:0}
+#summary-title {
+  color: rgba(255,255,255,.6);
+  font-size: clamp(10px, 1.3vw, 15px);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
+  margin-top: auto; 
 }
 
-@media screen and (max-width:767px){
-  #notice-box{padding:16px 20px}
-  #notice-title{font-size:15px;margin-bottom:8px}
-  #notice-body{font-size:12px}
-  #notice-skip-btn{padding:7px 20px;font-size:11px;margin-top:12px}
-  #reset-box{padding:16px 20px}
-  #reset-box h3{font-size:14px;margin-bottom:8px}
-  #reset-box p{font-size:11px;margin-bottom:12px}
-  #reset-confirm,#reset-cancel{padding:.5em 1.2em;font-size:11px}
-  #pity-box{padding:12px 16px;min-width:auto;width:85%}
-  #pity-box h3{font-size:14px;margin-bottom:10px}
-  .pity-row{font-size:11px;padding:6px 0}
-  .pity-val{font-size:12px}
-  .pity-note{font-size:9px;margin-top:8px}
-  #pity-close{top:5px;right:8px;font-size:16px}
-  #dev-rates-config{padding:10px!important}
-  #dev-rates-config h4{font-size:13px!important;margin-bottom:8px!important}
-  #dev-rates-config label{font-size:11px!important}
-  #dev-rates-config input{width:50px!important}
-  #dev-rates-config button{padding:6px 10px!important;font-size:11px!important;margin-top:10px!important}
-  #col-header h2{font-size:14px}
-  #col-close{padding:.3em .8em;font-size:11px}
-  .btn-pill{font-size:10px;padding:.4em 1em}
-  .btn-ghost{font-size:9px;padding:.3em .8em}
-  .pill-card{max-width:80px}
+#summary-pills {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 8px); 
+  flex-wrap: wrap; 
+  width: 100%;
+  max-width: 650px; 
+}
+
+#summary-close-btn {
+  background: rgba(255,255,255,.11);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #fff;
+  font-size: clamp(10px, 1.2vw, 14px);
+  padding: .5em 2.2em;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  margin-top: 10px;
+  margin-bottom: auto;
+  flex-shrink: 0;
+}
+#summary-close-btn:hover { background: rgba(255,255,255,.24); transform: scale(1.05); }
+
+.pill-card {
+  flex: 0 1 calc(20% - 8px);
+  max-width: 90px; 
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: clamp(6px, 2vw, 16px);
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,.16);
+  position: relative;
+  cursor: pointer; 
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  opacity: 0;
+  transform: translateY(40px) scale(.82);
+  transition: 
+    opacity .5s cubic-bezier(.175, .885, .32, 1.275), 
+    transform .5s cubic-bezier(.175, .885, .32, 1.275),
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+.pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
+
+.pill-card:hover {
+  transform: scale(1.08) translateY(-6px);
+  border-color: rgba(255,255,255,0.75);
+  z-index: 2;
+}
+.pill-card:active {
+  transform: scale(0.96) translateY(-2px); 
+  transition: transform 0.1s ease;
+}
+
+.pill-card img, .pill-card .pic-fallback {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9/16;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s ease;
+}
+.pill-card:hover img {
+  transform: scale(1.04); 
+}
+
+.pill-rarity {
+  font-size: clamp(6px, 1.2vw, 10px); 
+  font-weight: 800;
+  padding: clamp(2px, 0.8vh, 5px) 0;
+  text-align: center;
+  background: rgba(0,0,0,.75);
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.pill-r3 { border-color: #7080a0; }
+.pill-r3 .pill-rarity { color: #a0b0d0; }
+.pill-r3:hover { box-shadow: 0 8px 20px rgba(112,128,160,.5); }
+
+.pill-r4 { border-color: #c678dd; }
+.pill-r4 .pill-rarity { color: #e090ff; }
+.pill-r4:hover { box-shadow: 0 10px 25px rgba(198,120,221,.75); border-color: #f1b6ff; }
+
+.pill-r5 { border-color: #ffd700; }
+.pill-r5 .pill-rarity { color: #ffd700; }
+.pill-r5:hover { box-shadow: 0 12px 32px rgba(255,215,0,.8); border-color: #fff2a3; }
+
+.pill-r6 { border-color: #ff4444; }
+.pill-r6 .pill-rarity { color: #ff6666; }
+.pill-r6:hover { box-shadow: 0 12px 36px rgba(255,68,68,.9); border-color: #ff9999; }
+
+.pill-r7 { border-color: #ff00ff; }
+.pill-r7 .pill-rarity { color: #ff00ff; }
+.pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
+
+@media screen and (max-height: 450px) and (orientation: landscape) {
+  .pill-card {
+    flex: 0 1 calc(10% - 4px); 
+    max-width: 60px; 
+    border-radius: 6px;
+  }
+  #summary-pills {
+    gap: 4px;
+    max-width: 95%; 
+  }
+  #summary-layer {
+    padding: 10px;
+    justify-content: center;
+    gap: 6px;
+  }
+  #summary-title {
+    font-size: 10px;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+  #summary-close-btn {
+    margin-top: 4px;
+    padding: 0.3em 1.8em;
+    font-size: 9px;
+    margin-bottom: 0;
+  }
 }
 </style>
 </head>
