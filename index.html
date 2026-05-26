@@ -160,54 +160,52 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   display: none;
   flex-direction: column;
   align-items: center;
-  padding: 15px;
-  padding-top: 60px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  justify-content: flex-start; 
+  gap: clamp(6px, 1.5vh, 16px); 
+  padding: 30px 10px; 
   box-sizing: border-box;
+  overflow-y: auto; 
 }
 #summary-layer.active { display: flex; }
 
 #summary-title {
   color: rgba(255,255,255,.6);
-  font-size: clamp(12px, 1.5vw, 16px);
+  font-size: clamp(10px, 1.3vw, 15px);
   letter-spacing: 4px;
   text-transform: uppercase;
   text-shadow: 0 0 10px rgba(255,255,255,0.2);
-  margin-bottom: 20px;
-  flex-shrink: 0;
+  margin-top: auto; 
 }
 
 #summary-pills {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vw, 15px);
+  gap: clamp(4px, 1vw, 8px); 
+  flex-wrap: wrap; 
   width: 100%;
-  max-width: 700px;
-  margin-bottom: 30px;
+  max-width: 650px; 
 }
 
 #summary-close-btn {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 60;
   background: rgba(255,255,255,.11);
   border: 1px solid rgba(255,255,255,.28);
   color: #fff;
   font-size: clamp(10px, 1.2vw, 14px);
-  padding: .5em 1.5em;
+  padding: .5em 2.2em;
   border-radius: 30px;
   cursor: pointer;
   transition: background .2s, transform .2s;
+  margin-top: 10px;
+  margin-bottom: auto;
+  flex-shrink: 0;
 }
 #summary-close-btn:hover { background: rgba(255,255,255,.24); transform: scale(1.05); }
 
 .pill-card {
-  width: clamp(65px, 22vw, 110px);
-  flex-shrink: 0;
+  flex: 0 1 calc(20% - 8px);
+  max-width: 90px; 
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -215,7 +213,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   overflow: hidden;
   border: 2px solid rgba(255,255,255,.16);
   position: relative;
-  cursor: pointer;
+  cursor: pointer; 
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   opacity: 0;
@@ -252,12 +250,12 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pill-r7 .pill-rarity { color: #ff00ff; }
 .pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
 
-@media screen and (max-height: 450px) and (orientation: landscape) {
-  #summary-layer { padding-top: 45px; }
-  .pill-card { width: clamp(45px, 12vw, 75px); border-radius: 6px; }
-  #summary-pills { gap: 6px; max-width: 95%; }
-  #summary-title { font-size: 10px; margin-bottom: 10px; margin-top: 0; }
-  #summary-close-btn { top: 10px; left: 10px; padding: 0.3em 1.2em; font-size: 9px; }
+@media screen and (max-width: 768px), screen and (max-height: 450px) {
+  #summary-layer { padding: 10px; justify-content: center; gap: 8px; }
+  #summary-title { margin-top: 0; margin-bottom: 0; font-size: 11px; }
+  #summary-pills { gap: 6px; max-width: 95%; margin-bottom: 0; }
+  .pill-card { flex: 0 1 calc(20% - 6px); max-width: min(55px, 13vw); border-radius: 6px; }
+  #summary-close-btn { position: absolute; top: 12px; left: 12px; margin: 0; padding: 0.4em 1.4em; font-size: 10px; z-index: 60; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); }
 }
 </style>
 </head>
@@ -370,9 +368,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
     </div>
 
     <div id="summary-layer">
-      <button id="summary-close-btn" onclick="closeSummary()">✕ Đóng</button>
       <div id="summary-title">✨ KẾT QUẢ ROLL</div>
       <div id="summary-pills"></div>
+      <button id="summary-close-btn" onclick="closeSummary()">✕ Đóng</button>
     </div>
 
   </div>
