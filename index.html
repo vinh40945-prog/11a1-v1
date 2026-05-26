@@ -23,6 +23,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#e040fb,#ffd700);border-radius:10px;transition:width .15s ease-out}
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
+@keyframes sparkleGlow{0%,100%{box-shadow:0 0 0 2px #ff00ff,0 0 40px rgba(255,0,255,.8),inset 0 0 20px rgba(255,255,255,.5)}50%{box-shadow:0 0 0 3px #00ffff,0 0 70px rgba(0,255,255,1),inset 0 0 40px rgba(255,255,255,.8)}}
+@keyframes textSparkle{0%,100%{color:#ff00ff;text-shadow:0 0 8px #ff00ff,0 0 15px #fff}50%{color:#00ffff;text-shadow:0 0 15px #00ffff,0 0 25px #fff}}
+@keyframes borderSparkle{0%,100%{border-color:#ff00ff;box-shadow:0 0 15px rgba(255,0,255,.5)}50%{border-color:#00ffff;box-shadow:0 0 25px rgba(0,255,255,.8)}}
 
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
@@ -114,14 +117,14 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
 #cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
 #cv-inner.glow-6{box-shadow:0 0 0 2px #ff4444,0 0 52px rgba(255,68,68,.7)}
-#cv-inner.glow-7{box-shadow:0 0 0 2px #ff00ff,0 0 60px rgba(255,0,255,.8)}
+#cv-inner.glow-7{animation:sparkleGlow 2s ease-in-out infinite}
 #cv-inner{border-radius:12px;overflow:hidden}
 
 #cv-video{width:100%;aspect-ratio:16/9;display:block;background:#000;object-fit:contain}
 #cv-footer{background:rgba(4,2,16,.88);padding:clamp(6px,1.2%,12px) clamp(10px,2%,20px);display:flex;align-items:center;justify-content:space-between;gap:8px}
 #cv-rarity{font-size:clamp(11px,1.3vw,16px);font-weight:800;letter-spacing:1px}
 #cv-count{font-size:clamp(10px,1.1vw,13px);opacity:.7;color:#fff}
-.cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}.cv-r7{color:#ff00ff}
+.cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}.cv-r7{animation:textSparkle 2s ease-in-out infinite}
 #cv-close{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:clamp(10px,1.1vw,13px);padding:.42em 1.2em;border-radius:20px;cursor:pointer;transition:background .2s;white-space:nowrap}
 #cv-close:hover{background:rgba(255,255,255,.26)}
 
@@ -138,7 +141,8 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-4 .char-rarity{color:#c678dd}
 .rarity-5 .char-rarity{color:#ffd700}
 .rarity-6 .char-rarity{color:#ff5555}
-.rarity-7 .char-rarity{color:#ff00ff}
+.rarity-7 .char-rarity{animation:textSparkle 2s ease-in-out infinite}
+.char-card.rarity-7.owned{animation:borderSparkle 2s ease-in-out infinite;z-index:2}
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold}
 
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
@@ -246,9 +250,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pill-r6 .pill-rarity { color: #ff6666; }
 .pill-r6:hover { box-shadow: 0 12px 36px rgba(255,68,68,.9); border-color: #ff9999; }
 
-.pill-r7 { border-color: #ff00ff; }
-.pill-r7 .pill-rarity { color: #ff00ff; }
-.pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
+.pill-r7 { animation:borderSparkle 2s ease-in-out infinite; }
+.pill-r7 .pill-rarity { animation:textSparkle 2s ease-in-out infinite; background:rgba(0,0,0,.85); }
+.pill-r7:hover { animation:sparkleGlow 1.5s ease-in-out infinite; z-index:3; }
 
 @media screen and (max-width: 768px), screen and (max-height: 450px) {
   #summary-layer { padding: 10px; justify-content: center; gap: 8px; }
