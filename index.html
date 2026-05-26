@@ -816,26 +816,25 @@ function doReset(){
     if(input) input.value = DEFAULT_RATES['r' + r];
   });
   
-
   document.getElementById('dev-rates-config').style.display = 'none';
 
+  const devBubble = document.getElementById('dev-bubble');
+  if (devBubble) {
+      devBubble.style.display = 'none';
+  }
 
   p4=0; p5=0; rolls=0; owned={}; got6=false; isDev=false;
   save();
   closeReset();
-
 
   pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
   pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
   pool5 = CHAR_DATABASE.filter(c => c.rar === 5).map(c => c.id);
   pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
   pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
-
-
   for (let key in vidCache) {
       delete vidCache[key];
   }
-
 
   const overlay = document.getElementById('loading-overlay');
   overlay.style.display = 'flex';
