@@ -191,21 +191,125 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
-#summary-layer{position:absolute;inset:0;z-index:55;background:rgba(4,2,16,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2%,18px)}
-#summary-layer.active{display:flex}
-#summary-title{color:rgba(255,255,255,.6);font-size:clamp(10px,1.2vw,15px);letter-spacing:3px;text-transform:uppercase}
-#summary-pills{display:flex;flex-direction:row;align-items:stretch;justify-content:center;gap:clamp(3px,.5%,7px);flex-wrap:nowrap;width:94%}
-#summary-close-btn{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.32);color:#fff;font-size:clamp(11px,1.3vw,15px);padding:.52em 2.2em;border-radius:30px;cursor:pointer;transition:background .2s}
-#summary-close-btn:hover{background:rgba(255,255,255,.24)}
-.pill-card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:stretch;border-radius:clamp(6px,1.2%,14px);overflow:hidden;border:2px solid rgba(255,255,255,.15);opacity:0;transform:translateX(50px) scale(.88);transition:opacity .42s cubic-bezier(.22,.68,0,1.2),transform .42s cubic-bezier(.22,.68,0,1.2)}
-.pill-card.show{opacity:1;transform:translateX(0) scale(1)}
-.pill-card img,.pill-card .pic-fallback{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.pill-rarity{font-size:clamp(7px,.62vw,10px);font-weight:800;padding:3px 0 4px;text-align:center;background:rgba(0,0,0,.52)}
-.pill-r3{border-color:#7080a0}.pill-r3 .pill-rarity{color:#a0b0d0}
-.pill-r4{border-color:#c678dd;box-shadow:0 0 10px rgba(198,120,221,.45)}.pill-r4 .pill-rarity{color:#e090ff}
-.pill-r5{border-color:#ffd700;box-shadow:0 0 14px rgba(255,215,0,.55)}.pill-r5 .pill-rarity{color:#ffd700}
-.pill-r6{border-color:#ff4444;box-shadow:0 0 18px rgba(255,68,68,.65)}.pill-r6 .pill-rarity{color:#ff6666}
-.pill-r7{border-color:#ff00ff;box-shadow:0 0 22px rgba(255,0,255,.75)}.pill-r7 .pill-rarity{color:#ff00ff}
+#summary-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 55;
+  background: rgba(4,2,16,.94);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.5vw, 24px);
+}
+#summary-layer.active { display: flex; }
+#summary-title {
+  color: rgba(255,255,255,.6);
+  font-size: clamp(11px, 1.4vw, 16px);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+#summary-pills {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(8px, 1.8vw, 18px);
+  flex-wrap: wrap; 
+  width: min(95%, 920px);
+}
+#summary-close-btn {
+  background: rgba(255,255,255,.11);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #fff;
+  font-size: clamp(11px, 1.3vw, 15px);
+  padding: .6em 2.6em;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  margin-top: 10px;
+}
+#summary-close-btn:hover { background: rgba(255,255,255,.24); transform: scale(1.05); }
+
+.pill-card {
+  flex: 1 1 calc(18% - 12px);
+  max-width: 140px;
+  min-width: 82px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: clamp(16px, 3.2vw, 38px);
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,.16);
+  position: relative;
+  cursor: pointer; 
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+
+  opacity: 0;
+  transform: translateY(40px) scale(.82);
+  transition: 
+    opacity .5s cubic-bezier(.175, .885, .32, 1.275), 
+    transform .5s cubic-bezier(.175, .885, .32, 1.275),
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+.pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
+
+
+.pill-card:hover {
+  transform: scale(1.08) translateY(-6px);
+  border-color: rgba(255,255,255,0.75);
+  z-index: 2;
+}
+.pill-card:active {
+  transform: scale(0.96) translateY(-2px); 
+  transition: transform 0.1s ease;
+}
+
+.pill-card img, .pill-card .pic-fallback {
+  width: 100%;
+  aspect-ratio: 9/16;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s ease;
+}
+.pill-card:hover img {
+  transform: scale(1.04); 
+}
+
+.pill-rarity {
+  font-size: clamp(8px, .65vw, 12px);
+  font-weight: 800;
+  padding: 6px 0 7px;
+  text-align: center;
+  background: rgba(0,0,0,.75);
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+
+.pill-r3 { border-color: #7080a0; }
+.pill-r3 .pill-rarity { color: #a0b0d0; }
+.pill-r3:hover { box-shadow: 0 8px 20px rgba(112,128,160,.5); }
+
+.pill-r4 { border-color: #c678dd; }
+.pill-r4 .pill-rarity { color: #e090ff; }
+.pill-r4:hover { box-shadow: 0 10px 25px rgba(198,120,221,.75); border-color: #f1b6ff; }
+
+.pill-r5 { border-color: #ffd700; }
+.pill-r5 .pill-rarity { color: #ffd700; }
+.pill-r5:hover { box-shadow: 0 12px 32px rgba(255,215,0,.8); border-color: #fff2a3; }
+
+.pill-r6 { border-color: #ff4444; }
+.pill-r6 .pill-rarity { color: #ff6666; }
+.pill-r6:hover { box-shadow: 0 12px 36px rgba(255,68,68,.9); border-color: #ff9999; }
+
+.pill-r7 { border-color: #ff00ff; }
+.pill-r7 .pill-rarity { color: #ff00ff; }
+.pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
 </style>
 </head>
 <body>
@@ -818,6 +922,11 @@ function showSummary(sorted){
     const rar=rarityOf(id);
     const div=document.createElement('div');
     div.className='pill-card pill-r'+rar;
+    
+    div.onclick = function() {
+      openCharViewer(id);
+    };
+
     const img=document.createElement('img');
     img.src=imgSrc(id); img.alt=id;
     img.onerror=function(){
@@ -830,7 +939,8 @@ function showSummary(sorted){
     rt.className='pill-rarity'; rt.textContent='★'.repeat(rar);
     div.appendChild(img); div.appendChild(rt);
     summaryPills.appendChild(div);
-    setTimeout(()=>div.classList.add('show'),55+i*95);
+    
+    setTimeout(()=>div.classList.add('show'),60+i*85);
   });
 }
 function closeSummary(){
