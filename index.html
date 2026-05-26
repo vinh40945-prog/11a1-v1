@@ -9,7 +9,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
-
 #dev-rates-config {
   position: fixed !important; 
   z-index: 99999 !important;
@@ -17,7 +16,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   touch-action: none;
   user-select: none;
 }
-
 
 #dev-minimize-btn {
   position: absolute;
@@ -41,7 +39,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   background: #ff4444;
   border-color: #ff6666;
 }
-
 
 #dev-bubble {
   position: fixed;
@@ -243,73 +240,39 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
+
 #summary-layer {
   position: absolute;
   inset: 0;
   z-index: 55;
-  background: rgba(4,2,16,.96);
+  background: rgba(4,2,16,.94);
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  gap: clamp(8px, 2vh, 24px); 
+  padding: clamp(10px, 3vh, 20px);
   box-sizing: border-box;
+  overflow-y: auto; 
 }
 #summary-layer.active { display: flex; }
-
 #summary-title {
-  color: rgba(255,255,255,.7);
-  font-size: clamp(12px, 1.6vw, 16px);
-  letter-spacing: 3px;
+  color: rgba(255,255,255,.6);
+  font-size: clamp(11px, 1.4vw, 16px);
+  letter-spacing: 4px;
   text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255,255,255,0.3);
-  margin-bottom: clamp(10px, 2vh, 20px);
-  flex-shrink: 0;
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
 #summary-pills {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
-  align-items: center; 
-  gap: 2%;
-  row-gap: clamp(8px, 2vh, 18px);
-  width: 98%;
-  max-width: 900px;
-}
-
-
-.pill-card {
-  flex: 0 0 18.4%; 
-  max-width: 140px; 
-  aspect-ratio: 9/16;
-  
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  border-radius: clamp(8px, 2.5vw, 24px);
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,.16);
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  
-  opacity: 0;
-  transform: translateY(30px) scale(.85);
-  transition: 
-    opacity .4s cubic-bezier(.175, .885, .32, 1.2), 
-    transform .4s cubic-bezier(.175, .885, .32, 1.2),
-    border-color .25s ease,
-    box-shadow .25s ease;
-}
-.pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
-
-
-.pill-card:only-child {
-  flex: 0 0 45%; 
-  max-width: 220px;
-  min-width: 120px;
+  gap: clamp(4px, 1.2vw, 12px);
+  flex-wrap: wrap; 
+  width: 100%;
+  max-width: 860px; 
 }
 
 #summary-close-btn {
@@ -317,38 +280,69 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   border: 1px solid rgba(255,255,255,.28);
   color: #fff;
   font-size: clamp(11px, 1.3vw, 15px);
-  padding: .7em 2.8em;
+  padding: .6em 2.6em;
   border-radius: 30px;
   cursor: pointer;
   transition: background .2s, transform .2s;
-  margin-top: clamp(15px, 3vh, 25px);
-  flex-shrink: 0; 
+  margin-top: 10px;
+  flex-shrink: 0;
 }
 #summary-close-btn:hover { background: rgba(255,255,255,.24); transform: scale(1.05); }
 
-.pill-card:hover { transform: scale(1.06) translateY(-4px); border-color: rgba(255,255,255,0.8); z-index: 2; }
-.pill-card:active { transform: scale(0.96); transition: transform 0.1s; }
+.pill-card {
+  flex: 0 1 calc(20% - 10px);
+  max-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: clamp(8px, 2.5vw, 24px);
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,.16);
+  position: relative;
+  cursor: pointer; 
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  opacity: 0;
+  transform: translateY(40px) scale(.82);
+  transition: 
+    opacity .5s cubic-bezier(.175, .885, .32, 1.275), 
+    transform .5s cubic-bezier(.175, .885, .32, 1.275),
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+.pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
+
+.pill-card:hover {
+  transform: scale(1.08) translateY(-6px);
+  border-color: rgba(255,255,255,0.75);
+  z-index: 2;
+}
+.pill-card:active {
+  transform: scale(0.96) translateY(-2px); 
+  transition: transform 0.1s ease;
+}
 
 .pill-card img, .pill-card .pic-fallback {
   width: 100%;
-  height: 100%; 
+  height: auto;
   aspect-ratio: 9/16;
   object-fit: cover;
   display: block;
-  flex-grow: 1; 
   transition: transform .3s ease;
 }
-.pill-card:hover img { transform: scale(1.04); }
+.pill-card:hover img {
+  transform: scale(1.04); 
+}
 
 .pill-rarity {
-  font-size: clamp(8px, 1.2vw, 12px);
+  font-size: clamp(7px, 1.5vw, 12px);
   font-weight: 800;
-  padding: 6px 0;
+  padding: clamp(3px, 1vh, 7px) 0;
   text-align: center;
   background: rgba(0,0,0,.75);
   letter-spacing: 1px;
   border-top: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
 }
 
 .pill-r3 { border-color: #7080a0; }
@@ -370,6 +364,29 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pill-r7 { border-color: #ff00ff; }
 .pill-r7 .pill-rarity { color: #ff00ff; }
 .pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
+
+@media screen and (max-height: 450px) and (orientation: landscape) {
+  .pill-card {
+    flex: 0 1 calc(10% - 6px); 
+    max-width: 80px;
+    border-radius: 8px;
+  }
+  #summary-pills {
+    gap: 6px;
+  }
+  #summary-layer {
+    gap: 8px;
+  }
+  #summary-title {
+    font-size: 11px;
+    margin-bottom: 0;
+  }
+  #summary-close-btn {
+    margin-top: 4px;
+    padding: 0.4em 2em;
+    font-size: 10px;
+  }
+}
 </style>
 </head>
 <body>
@@ -495,24 +512,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const devPanel = document.getElementById('dev-rates-config');
   if (!devPanel) return;
 
-
   const minBtn = document.createElement('div');
   minBtn.id = 'dev-minimize-btn';
   minBtn.innerHTML = '➖';
   minBtn.title = 'Thu nhỏ thành bong bóng';
   devPanel.appendChild(minBtn);
 
-
   const bubble = document.createElement('div');
   bubble.id = 'dev-bubble';
   document.body.appendChild(bubble);
-
 
   devPanel.style.top = '15px';
   devPanel.style.right = '15px';
   bubble.style.top = '15px';
   bubble.style.right = '15px';
-
 
   function makeElementDraggable(element, isBubble = false, clickCallback = null) {
     let isDragging = false;
@@ -555,7 +568,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let newX = initialX + dx;
       let newY = initialY + dy;
       
-
       const maxX = window.innerWidth - element.offsetWidth;
       const maxY = window.innerHeight - element.offsetHeight;
       
@@ -571,16 +583,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isDragging = false;
       element.releasePointerCapture(e.pointerId);
       
-
       if (isBubble && !hasMoved && clickCallback) {
         clickCallback();
       }
     });
   }
 
-
   makeElementDraggable(devPanel);
-
 
   makeElementDraggable(bubble, true, () => {
     bubble.style.display = 'none';
@@ -588,7 +597,6 @@ document.addEventListener("DOMContentLoaded", () => {
     devPanel.style.left = bubble.style.left;
     devPanel.style.top = bubble.style.top;
   });
-
 
   minBtn.addEventListener('click', (e) => {
     e.stopPropagation(); 
@@ -598,7 +606,6 @@ document.addEventListener("DOMContentLoaded", () => {
     bubble.style.left = devPanel.style.left;
     bubble.style.top = devPanel.style.top;
   });
-
 
   const devObserver = new MutationObserver(() => {
     if (devPanel.style.display === 'block' && bubble.style.display === 'none') {
@@ -642,7 +649,6 @@ let pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
 
 const PITY4=10, PITY5=90, MAX_DUP=6;
 
-
 const DEFAULT_RATES = { r3: 85.0, r4: 10.0, r5: 4.0, r6: 0.8, r7: 0.2 };
 let currentRates = { ...DEFAULT_RATES };
 
@@ -650,7 +656,6 @@ let p4=0,p5=0,rolls=0,owned={},got6=false,isDev=false;
 (function(){try{const d=JSON.parse(localStorage.getItem('gv5')||'{}');
   p4=d.p4||0;p5=d.p5||0;rolls=d.t||0;owned=d.o||{};got6=d.h||false;isDev=d.d||false;}catch(e){}})();
 function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6,d:isDev}));}catch(e){}}
-
 
 if (isDev) {
     document.getElementById('dev-rates-config').style.display = 'block';
@@ -820,7 +825,6 @@ function openReset(){document.getElementById('reset-modal').classList.add('visib
 function closeReset(){document.getElementById('reset-modal').classList.remove('visible');}
 
 function doReset(){
-
   currentRates = { ...DEFAULT_RATES };
   ['3','4','5','6','7'].forEach(r => {
     const input = document.getElementById('dev-rate-' + r);
@@ -874,7 +878,6 @@ function openPity(){
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
 document.getElementById('pity-modal').addEventListener('click',function(e){if(e.target===this)closePity();});
 
-
 function pickOne(){
   rolls++;p4++;p5++;
 
@@ -882,10 +885,8 @@ function pickOne(){
   if(p5>=PITY5){p5=0;p4=0;return r5();}
   if(p4>=PITY4){p4=0;return r4();}
   
-
   const totalRate = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
   const r = Math.random() * totalRate;
-
 
   if (r < currentRates.r7) return pool7.length > 0 ? getRollId(pool7, r6()) : r6();
   if (r < currentRates.r7 + currentRates.r6) return r6();
@@ -969,7 +970,6 @@ function doRoll1(){
     }
   );
 }
-
 
 function applyDevRates() {
   currentRates.r3 = parseFloat(document.getElementById('dev-rate-3').value) || 0;
