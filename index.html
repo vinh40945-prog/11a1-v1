@@ -9,6 +9,58 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
+
+#dev-rates-config {
+  position: fixed !important; 
+  z-index: 99999 !important;
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+
+#dev-minimize-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+#dev-minimize-btn:hover {
+  background: #ff4444;
+  border-color: #ff6666;
+}
+
+
+#dev-bubble {
+  position: fixed;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: url('pic/dev.png') center center / cover no-repeat, #222;
+  border: 2px solid #ffd700;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.55), inset 0 0 8px rgba(0,0,0,0.6);
+  z-index: 99999;
+  cursor: move;
+  touch-action: none;
+  display: none; 
+  user-select: none;
+  transition: transform 0.1s ease;
+}
+#dev-bubble:active {
+  transform: scale(0.92);
+}
 #loading-overlay{position:fixed;inset:0;z-index:99999;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px;transition:opacity .5s,visibility .5s}
 #loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #loading-logo{font-size:clamp(32px,6vw,52px);animation:pulse 1.5s infinite alternate}
@@ -97,7 +149,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #collection-panel{position:absolute;inset:0;z-index:30;background:rgba(8,6,20,.97);backdrop-filter:blur(10px);display:none;flex-direction:column;padding:2%}
 #collection-panel.visible{display:flex}
 #col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5%}
-#col-header h2{color:#ffd700;font-size:clamp(13px,1.9vw,21px);letter-spacing:2px;user-select:none}
+#col-header h2{color:#ffd700;font-size:clamp(13px,1.9vw,21px);letter-spacing:2px;user-select:none;cursor:pointer;}
 #col-close{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;padding:.38em 1.1em;border-radius:6px;cursor:pointer;font-size:clamp(10px,1.1vw,13px)}
 #col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(65px,7.5%,105px),1fr));gap:clamp(4px,.65%,9px);overflow-y:auto;flex:1;padding-right:4px}
 #col-grid::-webkit-scrollbar{width:3px}
@@ -247,7 +299,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   
-
   opacity: 0;
   transform: translateY(40px) scale(.82);
   transition: 
@@ -257,7 +308,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
     box-shadow .25s ease;
 }
 .pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
-
 
 .pill-card:hover {
   transform: scale(1.08) translateY(-6px);
@@ -289,7 +339,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   letter-spacing: 1px;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
-
 
 .pill-r3 { border-color: #7080a0; }
 .pill-r3 .pill-rarity { color: #a0b0d0; }
@@ -362,6 +411,19 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
       <button id="collection-toggle" class="btn-ghost" onclick="toggleCollection()">👜 BST</button>
     </div>
 
+    <div id="dev-rates-config" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100; padding: 15px; background: rgba(0,0,0,0.85); border: 1px solid #ffd700; border-radius: 12px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+      <h4 style="color:#ffd700; margin-bottom:12px; font-size:15px; text-transform: uppercase; letter-spacing: 1px;">🛠 Dev Panel: Tỉ lệ Gacha</h4>
+      <div style="display:flex; flex-direction: column; gap:8px; font-size:13px; color: #fff;">
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 3★: <input type="number" id="dev-rate-3" value="85" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 4★: <input type="number" id="dev-rate-4" value="10" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 5★: <input type="number" id="dev-rate-5" value="4" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 6★: <input type="number" id="dev-rate-6" value="0.8" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 7★: <input type="number" id="dev-rate-7" value="0.2" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+      </div>
+      <button onclick="applyDevRates()" style="margin-top:15px; width: 100%; padding:8px 12px; background:linear-gradient(135deg, #4CAF50, #2E7D32); color:white; font-weight: bold; border:none; border-radius:6px; cursor:pointer;">LƯU TỈ LỆ MỚI</button>
+      <div id="rate-msg" style="color:#00ff00; margin-top:8px; font-size:12px; text-align:center; display:none;">✅ Đã lưu thành công!</div>
+    </div>
+
     <div id="pity-modal">
       <div id="pity-box">
         <button id="pity-close" onclick="closePity()">✕</button>
@@ -417,6 +479,128 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 </div>
 
 <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const devPanel = document.getElementById('dev-rates-config');
+  if (!devPanel) return;
+
+
+  const minBtn = document.createElement('div');
+  minBtn.id = 'dev-minimize-btn';
+  minBtn.innerHTML = '➖';
+  minBtn.title = 'Thu nhỏ thành bong bóng';
+  devPanel.appendChild(minBtn);
+
+
+  const bubble = document.createElement('div');
+  bubble.id = 'dev-bubble';
+  document.body.appendChild(bubble);
+
+
+  devPanel.style.top = '15px';
+  devPanel.style.right = '15px';
+  bubble.style.top = '15px';
+  bubble.style.right = '15px';
+
+
+  function makeElementDraggable(element, isBubble = false, clickCallback = null) {
+    let isDragging = false;
+    let hasMoved = false;
+    let startX, startY, initialX, initialY;
+
+    element.addEventListener('pointerdown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target === minBtn) {
+        return;
+      }
+
+      isDragging = true;
+      hasMoved = false;
+      
+      const rect = element.getBoundingClientRect();
+      initialX = rect.left;
+      initialY = rect.top;
+      
+      startX = e.clientX;
+      startY = e.clientY;
+      
+      element.style.right = 'auto';
+      element.style.bottom = 'auto';
+      element.style.left = `${initialX}px`;
+      element.style.top = `${initialY}px`;
+      
+      element.setPointerCapture(e.pointerId);
+    });
+
+    element.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        hasMoved = true;
+      }
+      
+      let newX = initialX + dx;
+      let newY = initialY + dy;
+      
+
+      const maxX = window.innerWidth - element.offsetWidth;
+      const maxY = window.innerHeight - element.offsetHeight;
+      
+      newX = Math.max(0, Math.min(newX, maxX));
+      newY = Math.max(0, Math.min(newY, maxY));
+      
+      element.style.left = `${newX}px`;
+      element.style.top = `${newY}px`;
+    });
+
+    element.addEventListener('pointerup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      element.releasePointerCapture(e.pointerId);
+      
+
+      if (isBubble && !hasMoved && clickCallback) {
+        clickCallback();
+      }
+    });
+  }
+
+
+  makeElementDraggable(devPanel);
+
+
+  makeElementDraggable(bubble, true, () => {
+    bubble.style.display = 'none';
+    devPanel.style.display = 'block';
+    devPanel.style.left = bubble.style.left;
+    devPanel.style.top = bubble.style.top;
+  });
+
+
+  minBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+
+    devPanel.style.display = 'none';
+    bubble.style.display = 'block';
+    bubble.style.left = devPanel.style.left;
+    bubble.style.top = devPanel.style.top;
+  });
+
+
+  const devObserver = new MutationObserver(() => {
+    if (devPanel.style.display === 'block' && bubble.style.display === 'none') {
+      const rect = devPanel.getBoundingClientRect();
+      if (devPanel.style.right !== 'auto') {
+        devPanel.style.right = 'auto';
+        devPanel.style.left = `${rect.left}px`;
+        devPanel.style.top = `${rect.top}px`;
+      }
+    }
+  });
+  devObserver.observe(devPanel, { attributes: true, attributeFilter: ['style'] });
+});
 'use strict';
 
 const P_PIC='pic/',P_SFX='sfx/',P_ROLL='roll/',P_CHAR='char/';
@@ -446,12 +630,20 @@ let pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
 let pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
 
 const PITY4=10, PITY5=90, MAX_DUP=6;
-const R4 = 0.08, R5 = 0.02, R6 = 0.005;
+
+
+const DEFAULT_RATES = { r3: 85.0, r4: 10.0, r5: 4.0, r6: 0.8, r7: 0.2 };
+let currentRates = { ...DEFAULT_RATES };
 
 let p4=0,p5=0,rolls=0,owned={},got6=false,isDev=false;
 (function(){try{const d=JSON.parse(localStorage.getItem('gv5')||'{}');
   p4=d.p4||0;p5=d.p5||0;rolls=d.t||0;owned=d.o||{};got6=d.h||false;isDev=d.d||false;}catch(e){}})();
 function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6,d:isDev}));}catch(e){}}
+
+
+if (isDev) {
+    document.getElementById('dev-rates-config').style.display = 'block';
+}
 
 function removeInvalidChar(id) {
     if (isDev) return; 
@@ -615,10 +807,45 @@ function closeNotice(){
 
 function openReset(){document.getElementById('reset-modal').classList.add('visible');}
 function closeReset(){document.getElementById('reset-modal').classList.remove('visible');}
+
 function doReset(){
-  p4=0;p5=0;rolls=0;owned={};got6=false;isDev=false;
+
+  currentRates = { ...DEFAULT_RATES };
+  ['3','4','5','6','7'].forEach(r => {
+    const input = document.getElementById('dev-rate-' + r);
+    if(input) input.value = DEFAULT_RATES['r' + r];
+  });
+  
+
+  document.getElementById('dev-rates-config').style.display = 'none';
+
+
+  p4=0; p5=0; rolls=0; owned={}; got6=false; isDev=false;
   save();
-  location.reload();
+  closeReset();
+
+
+  pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
+  pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
+  pool5 = CHAR_DATABASE.filter(c => c.rar === 5).map(c => c.id);
+  pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
+  pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
+
+
+  for (let key in vidCache) {
+      delete vidCache[key];
+  }
+
+
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'flex';
+  
+  requestAnimationFrame(() => {
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+          runPreload();
+      }, 300);
+  });
 }
 document.getElementById('reset-modal').addEventListener('click',function(e){if(e.target===this)closeReset();});
 
@@ -637,17 +864,27 @@ function openPity(){
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
 document.getElementById('pity-modal').addEventListener('click',function(e){if(e.target===this)closePity();});
 
+
 function pickOne(){
   rolls++;p4++;p5++;
+
   if(!got6&&all5() && pool6.length > 0){got6=true;p4=0;p5=0;return r6();} 
   if(p5>=PITY5){p5=0;p4=0;return r5();}
   if(p4>=PITY4){p4=0;return r4();}
-  const x=Math.random();
-  if(got6&&x<R6 && pool6.length > 0) return r6();
-  if(x<R5){p5=0;p4=0;return r5();}
-  if(x<R5+R4){p4=0;return r4();}
+  
+
+  const totalRate = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
+  const r = Math.random() * totalRate;
+
+
+  if (r < currentRates.r7) return pool7.length > 0 ? getRollId(pool7, r6()) : r6();
+  if (r < currentRates.r7 + currentRates.r6) return r6();
+  if (r < currentRates.r7 + currentRates.r6 + currentRates.r5) { p5=0; p4=0; return r5(); }
+  if (r < currentRates.r7 + currentRates.r6 + currentRates.r5 + currentRates.r4) { p4=0; return r4(); }
+  
   return r3();
 }
+
 function pick10(){
   const res=[];let has4p=false;
   for(let i=0;i<10;i++){const id=pickOne();if(rarityOf(id)>=4)has4p=true;res.push(id);}
@@ -721,6 +958,24 @@ function doRoll1(){
       if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;}
     }
   );
+}
+
+
+function applyDevRates() {
+  currentRates.r3 = parseFloat(document.getElementById('dev-rate-3').value) || 0;
+  currentRates.r4 = parseFloat(document.getElementById('dev-rate-4').value) || 0;
+  currentRates.r5 = parseFloat(document.getElementById('dev-rate-5').value) || 0;
+  currentRates.r6 = parseFloat(document.getElementById('dev-rate-6').value) || 0;
+  currentRates.r7 = parseFloat(document.getElementById('dev-rate-7').value) || 0;
+
+  const total = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
+  if (Math.abs(total - 100) > 0.1) {
+    alert("⚠️ Lưu ý: Tổng tỉ lệ đang là " + total.toFixed(1) + "% (Khác 100%). Hệ thống sẽ tự chia theo tỷ trọng.");
+  }
+  
+  const msg = document.getElementById('rate-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2500);
 }
 
 function playChar1(id){
@@ -885,6 +1140,7 @@ function hiddenDevTrigger() {
         const code = prompt("Xác thực hệ thống:");
         if (code === "16052009") {
             isDev = true;
+            document.getElementById('dev-rates-config').style.display = 'block'; 
             
             pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
             pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
@@ -899,7 +1155,7 @@ function hiddenDevTrigger() {
             got6 = true;
             save();
             renderCollection();
-            alert("✨ Đã mở khóa quyền Nhà phát triển thành công. Toàn bộ nhân vật ẩn/thiếu file đã hiển thị mã ID!");
+            alert("✨ Đã mở khóa quyền Nhà phát triển thành công! Bảng tùy chỉnh tỉ lệ Gacha đã được bật.");
         } else if (code !== null) {
             alert("❌ Mã xác thực không chính xác!");
         }
