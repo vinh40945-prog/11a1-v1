@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REMEMBER</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    
     <style>
         * {
             box-sizing: border-box;
@@ -107,8 +106,8 @@
             will-change: opacity;
         }
 
-        .card-3d.darken::after {
-            opacity: 0.85; 
+        .swiper-slide:not(.swiper-slide-active):not(.swiper-slide-next):not(.swiper-slide-prev) .card-3d::after {
+            opacity: 0.85;
         }
 
         .zoom-overlay {
@@ -152,20 +151,13 @@
             let isDragging = false;
             let holdTimer = null;
 
-            function playSnippet(vid) {
+            function playSnippet(vid, forceMute = true) {
                 vid.currentTime = 0;
-                vid.muted = false;
-                vid.play().then(() => {
-                    vid.classList.add('playing');
-                    clearTimeout(vid.snippetTimeout);
-                    vid.snippetTimeout = setTimeout(() => {
-                        vid.pause();
-                        vid.currentTime = 0;
-                        vid.classList.remove('playing');
-                    }, 2500);
-                }).catch(() => {
-                    vid.muted = true;
-                    vid.play().then(() => {
+                vid.muted = forceMute;
+                const playPromise = vid.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
                         vid.classList.add('playing');
                         clearTimeout(vid.snippetTimeout);
                         vid.snippetTimeout = setTimeout(() => {
@@ -174,7 +166,7 @@
                             vid.classList.remove('playing');
                         }, 2500);
                     }).catch(() => {});
-                });
+                }
             }
 
             for (let i = 1; i <= maxImages; i++) {
@@ -182,12 +174,13 @@
                 slideDiv.className = 'swiper-slide';
 
                 const cardDiv = document.createElement('div');
-                cardDiv.className = 'card-3d darken';
+                cardDiv.className = 'card-3d';
 
                 const img = document.createElement('img');
                 img.setAttribute('loading', 'lazy'); 
                 const imgExtensions = ['png', 'jpg', 'jpeg'];
                 let found = false;
+                
                 imgExtensions.forEach(ext => {
                   if (!found) {
                     const testImg = new Image();
@@ -210,6 +203,7 @@
                 vid.playsInline = true;
                 vid.preload = 'metadata';
                 vid.className = 'live-video';
+                vid.muted = true;
                 
                 vid.onloadedmetadata = () => {
                     cardDiv.appendChild(vid);
@@ -219,24 +213,6 @@
                 slideDiv.appendChild(cardDiv);
                 wrapperEl.appendChild(slideDiv);
             }
-
-            const updateFocusMode = (swiper) => {
-                const slides = swiper.slides;
-                slides.forEach(slide => {
-                    const card = slide.querySelector('.card-3d');
-                    if(card) card.classList.add('darken');
-                });
-                
-                const active = swiper.activeIndex;
-                const focusRange = [active - 2, active - 1, active, active + 1, active + 2];
-                
-                focusRange.forEach(index => {
-                    if (slides[index]) {
-                        const card = slides[index].querySelector('.card-3d');
-                        if (card) card.classList.remove('darken');
-                    }
-                });
-            };
 
             window.albumSwiper = new Swiper('.swiper', {
                 effect: 'coverflow',
@@ -256,18 +232,16 @@
                 keyboard: { enabled: true },
                 on: {
                     init: function () { 
-                        updateFocusMode(this); 
                         setTimeout(() => {
                             if (isZoomed) return;
                             const activeSlide = this.slides[this.activeIndex];
                             if(activeSlide) {
                                 const vid = activeSlide.querySelector('video.live-video');
-                                if(vid) playSnippet(vid);
+                                if(vid) playSnippet(vid, true);
                             }
-                        }, 500);
+                        }, 100);
                     },
-                    slideChangeTransitionEnd: function () { 
-                        updateFocusMode(this); 
+                    slideChange: function () { 
                         document.querySelectorAll('video.live-video').forEach(v => {
                             v.pause();
                             v.currentTime = 0;
@@ -278,7 +252,7 @@
                             const activeSlide = this.slides[this.activeIndex];
                             if(activeSlide) {
                                 const vid = activeSlide.querySelector('video.live-video');
-                                if(vid) playSnippet(vid);
+                                if(vid) playSnippet(vid, true);
                             }
                         }
                     }
@@ -292,7 +266,7 @@
                     const vid = slide.querySelector('video.live-video');
                     if (vid) {
                         holdTimer = setTimeout(() => {
-                            playSnippet(vid);
+                            playSnippet(vid, false);
                         }, 350);
                     }
                 }
@@ -332,7 +306,6 @@
                 const rect = card.getBoundingClientRect();
 
                 activeClone = card.cloneNode(true);
-                activeClone.classList.remove('darken');
                 
                 Object.assign(activeClone.style, {
                     position: 'fixed',
@@ -414,7 +387,6 @@
                 newCard.style.opacity = '0';
 
                 activeClone = newCard.cloneNode(true);
-                activeClone.classList.remove('darken');
                 
                 const img = newCard.querySelector('img');
                 const target = calculateTargetSize(img);
