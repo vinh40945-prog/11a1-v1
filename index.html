@@ -110,8 +110,8 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 
 #char-viewer{position:absolute;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:transparent;transition:background .3s}
 #char-viewer.open{display:flex;background:rgba(0,0,0,.82)}
-#cv-inner{position:relative;width:min(78%,calc(78vh*16/9));opacity:0;transform:translate(var(--cv-sx,0px),var(--cv-sy,0px)) scale(var(--cv-ss,.82));transition:opacity .35s cubic-bezier(.34,1.56,.64,1),transform .35s cubic-bezier(.34,1.56,.64,1)}
-#char-viewer.open #cv-inner{opacity:1;transform:translate(0,0) scale(1)}
+#cv-inner{position:relative;width:min(78%,calc(78vh*16/9));opacity:0;transform:scale(.82) translateY(24px);transition:opacity .32s cubic-bezier(.22,.68,0,1.15),transform .32s cubic-bezier(.22,.68,0,1.15)}
+#char-viewer.open #cv-inner{opacity:1;transform:scale(1) translateY(0)}
 
 #cv-inner.glow-3{box-shadow:0 0 0 2px #7080a0,0 0 28px rgba(112,128,160,.4)}
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
@@ -284,8 +284,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   .pill-card { flex: 0 1 calc(20% - 6px); max-width: min(55px, 13vw); border-radius: 6px; }
   #summary-close-btn { position: absolute; top: 12px; left: 12px; margin: 0; padding: 0.4em 1.4em; font-size: 10px; z-index: 60; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); }
 }
-
-#watermark{position:fixed;bottom:5px;left:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.8px;pointer-events:none;z-index:99998;user-select:none;font-weight:400;font-family:'Segoe UI',sans-serif}
 </style>
 </head>
 <body>
@@ -296,15 +294,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
   <div id="loading-text">Đang tải... 0%</div>
 </div>
 
-<div id="watermark">MAKE BY VINH</div>
-
 <div id="notice-overlay">
   <div id="notice-box">
     <div id="notice-title">Thông Báo</div>
-    <div id="notice-body">• Roll x10 luôn có ≥1 nhân vật 4★
+    <div id="notice-body">• ROLL X1 — triệu hồi 1 nhân vật
+• ROLL X10 — triệu hồi 10, luôn có ≥1 nhân vật 4★
 • Pity 5★: đảm bảo sau mỗi 90 lần
-• 6★: Khê nhưng khi có hãy kiểm tra bộ sưu tập
-Cập nhật texture của một số nhân vật và animation</div>
+• 6★: Khê nhưng khi có hãy kiểm tra bộ sưu tập</div>
     <div id="notice-countdown">Có thể bỏ qua sau <span id="cd">5</span>s...</div>
     <button id="notice-skip-btn" onclick="closeNotice()">Bỏ qua ✕</button>
   </div>
@@ -521,38 +517,9 @@ document.addEventListener("DOMContentLoaded", () => {
 'use strict';
 
 const P_PIC='pic/',P_SFX='sfx/',P_ROLL='roll/',P_CHAR='char/';
-const IMG_FMTS=['png','jpg','jpeg','webp'];
 function imgSrc(id){return P_PIC+id+'.png';}
-function imgSrcBase(id){return P_PIC+id;}
-function imgChar2Base(id){return 'char2/'+id+'b';}
-function imgChar2(id){return imgChar2Base(id)+'.png';}
 function charSrc(id){return P_CHAR+id+'.mp4';}
 function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:r===6?4:5)+'.mp4';}
-
-function setImgFallback(imgEl,baseNoExt,onFail){
-  let i=0;
-  function next(){
-    if(i>=IMG_FMTS.length){imgEl.style.display='none';if(onFail)onFail();return;}
-    imgEl.onerror=next;
-    imgEl.src=baseNoExt+'.'+IMG_FMTS[i++];
-  }
-  imgEl.onerror=next;
-  imgEl.src=baseNoExt+'.'+IMG_FMTS[i++];
-}
-
-function loadImgMultiFormat(baseNoExt){
-  return new Promise(res=>{
-    let i=0;
-    function tryNext(){
-      if(i>=IMG_FMTS.length){res(null);return;}
-      const img=new Image(),src=baseNoExt+'.'+IMG_FMTS[i++];
-      img.onload=()=>res(src);
-      img.onerror=tryNext;
-      img.src=src;
-    }
-    tryNext();
-  });
-}
 
 const CHAR_DATABASE = [];
 
@@ -693,8 +660,6 @@ function preloadVideo(src) {
 
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
 
-const char2FormatCache={};
-
 async function runPreload(){
   try {
       setLP(5, 'Đang quét dữ liệu nhân vật...');
@@ -703,9 +668,8 @@ async function runPreload(){
       let checked = 0;
       for (let i = 0; i < allIds.length; i += 10) {
           const chunk = allIds.slice(i, i + 10);
-          await Promise.all(chunk.map(id => loadImgMultiFormat(imgChar2Base(id)).then(found => {
-              if(found) char2FormatCache[id]=found;
-              else removeInvalidChar(id);
+          await Promise.all(chunk.map(id => loadImg(imgChar2(id)).then(ok => {
+              if(!ok) removeInvalidChar(id);
           })));
           checked += chunk.length;
           setLP(5 + (checked / allIds.length) * 35, 'Đang kiểm tra... ' + Math.round((checked / allIds.length) * 100) + '%');
@@ -1134,7 +1098,7 @@ function showSummary(sorted){
     div.className='pill-card pill-r'+rar;
     
     div.onclick = function() {
-      openCharViewer(id, this);
+      openCharViewer(id);
     };
 
     if(id === '51'){
@@ -1149,12 +1113,7 @@ function showSummary(sorted){
     }
 
     const img=document.createElement('img');
-    img.alt=id;
-    setImgFallback(img,imgSrcBase(id),function(){
-      const fb=document.createElement('div');
-      fb.className='pic-fallback'; fb.textContent='ID:'+id;
-      div.insertBefore(fb,div.firstChild);
-    });
+    img.src=imgSrc(id); img.alt=id;
     img.onerror=function(){
       this.style.display='none';
       const fb=document.createElement('div');
@@ -1181,7 +1140,7 @@ function renderCollection(){
     const cnt=owned[id]||0,rar=rarityOf(id);
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
-    div.onclick=function(){ openCharViewer(id,this); };
+    div.onclick=function(){ openCharViewer(id); };
 
     if(id === '51' && cnt > 0){
       const remBtn = document.createElement('button');
@@ -1195,33 +1154,20 @@ function renderCollection(){
     }
 
     const img=document.createElement('img');
-    img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
+    img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
 
     if(cnt===0){
       img.style.cssText='filter:brightness(0);opacity:1;';
     }
 
-    const char2Base=imgChar2Base(id);
-    const char2Cached=char2FormatCache[id];
-    if(char2Cached){
-      img.src=char2Cached;
-      img.onerror=function(){
-        this.style.display='none';
-        const fb=document.createElement('div');
-        fb.className='pic-fallback';
-        fb.textContent=cnt>0?('ID:'+id):'???';
-        if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
-        div.insertBefore(fb,div.firstChild);
-      };
-    } else {
-      setImgFallback(img,char2Base,function(){
-        const fb=document.createElement('div');
-        fb.className='pic-fallback';
-        fb.textContent=cnt>0?('ID:'+id):'???';
-        if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
-        div.insertBefore(fb,div.firstChild);
-      });
-    }
+    img.onerror=function(){
+      this.style.display='none';
+      const fb=document.createElement('div');
+      fb.className='pic-fallback';
+      fb.textContent=cnt>0?('ID:'+id):'???';
+      if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
+      div.insertBefore(fb,div.firstChild);
+    };
 
     const rt=document.createElement('div'); rt.className='char-rarity';
     rt.textContent=cnt>0?'★'.repeat(rar):'✦';
@@ -1244,35 +1190,18 @@ const cvVideo = document.getElementById('cv-video');
 const cvRar   = document.getElementById('cv-rarity');
 const cvCnt   = document.getElementById('cv-count');
 const cvSpin  = document.getElementById('cv-spinner');
-let cvOpen = false, cvClosing = false;
+let cvOpen = false;
 
-function openCharViewer(id, sourceEl){
-  if(cvOpen || cvClosing) return;
+function openCharViewer(id){
+  if(cvOpen) return;
   const cnt = owned[id]||0;
-  if(cnt === 0) return;
+  if(cnt === 0) return; 
   const rar = rarityOf(id);
 
   cvInner.className = 'glow-'+rar;
   cvRar.className   = 'cv-r'+rar;
-  cvRar.textContent = '★'.repeat(rar) + ' ' + id;
-  cvCnt.textContent = cnt > 1 ? '× '+cnt+' lần sở hữu' : '✓ Đã sở hữu';
-
-  if(sourceEl){
-    const rect = sourceEl.getBoundingClientRect();
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const cx = rect.left + rect.width/2 - vw/2;
-    const cy = rect.top  + rect.height/2 - vh/2;
-    const cvW = cvInner.offsetWidth || vw*0.78;
-    const ss  = Math.max(rect.width/cvW, 0.06);
-    cvInner.style.setProperty('--cv-sx', cx+'px');
-    cvInner.style.setProperty('--cv-sy', cy+'px');
-    cvInner.style.setProperty('--cv-ss', ss);
-  } else {
-    cvInner.style.setProperty('--cv-sx','0px');
-    cvInner.style.setProperty('--cv-sy','0px');
-    cvInner.style.setProperty('--cv-ss','.82');
-  }
-  cvInner.style.transition='';
+  cvRar.textContent = '★'.repeat(rar) + ' ' + id; 
+  cvCnt.textContent = cnt > 0 ? (cnt > 1 ? '× '+cnt+' lần sở hữu' : '✓ Đã sở hữu') : '🔒 Chưa sở hữu';
 
   cvEl.style.display = 'flex';
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ cvEl.classList.add('open'); }); });
@@ -1302,18 +1231,14 @@ function openCharViewer(id, sourceEl){
 
 function closeCharViewer(){
   if(!cvOpen) return;
-  cvOpen = false;
-  cvClosing = true;
-  cvInner.style.transition='opacity .22s ease-in,transform .22s cubic-bezier(.4,0,.6,1)';
   cvEl.classList.remove('open');
   setTimeout(()=>{
     cvEl.style.display = 'none';
-    cvInner.style.transition='';
-    cvVideo.pause(); cvVideo.src='';
-    cvVideo.style.opacity='0';
+    cvVideo.pause(); cvVideo.src = '';
+    cvVideo.style.opacity = '0';
     cvSpin.classList.remove('show');
-    cvClosing = false;
-  }, 240);
+    cvOpen = false;
+  }, 320);
 }
 
 function cvClickOutside(e){
