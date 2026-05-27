@@ -23,9 +23,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #loading-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#e040fb,#ffd700);border-radius:10px;transition:width .15s ease-out}
 #loading-text{font-size:clamp(12px,2vw,15px);letter-spacing:1px;opacity:.8}
 @keyframes pulse{0%{transform:scale(1)}100%{transform:scale(1.1);text-shadow:0 0 20px rgba(255,215,0,.8)}}
-@keyframes sparkleGlow{0%,100%{box-shadow:0 0 0 2px #ff00ff,0 0 40px rgba(255,0,255,.8),inset 0 0 20px rgba(255,255,255,.5)}50%{box-shadow:0 0 0 3px #00ffff,0 0 70px rgba(0,255,255,1),inset 0 0 40px rgba(255,255,255,.8)}}
-@keyframes textSparkle{0%,100%{color:#ff00ff;text-shadow:0 0 8px #ff00ff,0 0 15px #fff}50%{color:#00ffff;text-shadow:0 0 15px #00ffff,0 0 25px #fff}}
-@keyframes borderSparkle{0%,100%{border-color:#ff00ff;box-shadow:0 0 15px rgba(255,0,255,.5)}50%{border-color:#00ffff;box-shadow:0 0 25px rgba(0,255,255,.8)}}
 
 #notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .4s}
 #notice-overlay.hidden{opacity:0;pointer-events:none}
@@ -117,14 +114,14 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
 #cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
 #cv-inner.glow-6{box-shadow:0 0 0 2px #ff4444,0 0 52px rgba(255,68,68,.7)}
-#cv-inner.glow-7{animation:sparkleGlow 2s ease-in-out infinite}
+#cv-inner.glow-7{box-shadow:0 0 0 2px #ff00ff,0 0 60px rgba(255,0,255,.8)}
 #cv-inner{border-radius:12px;overflow:hidden}
 
 #cv-video{width:100%;aspect-ratio:16/9;display:block;background:#000;object-fit:contain}
 #cv-footer{background:rgba(4,2,16,.88);padding:clamp(6px,1.2%,12px) clamp(10px,2%,20px);display:flex;align-items:center;justify-content:space-between;gap:8px}
 #cv-rarity{font-size:clamp(11px,1.3vw,16px);font-weight:800;letter-spacing:1px}
 #cv-count{font-size:clamp(10px,1.1vw,13px);opacity:.7;color:#fff}
-.cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}.cv-r7{animation:textSparkle 2s ease-in-out infinite}
+.cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}.cv-r7{color:#ff00ff}
 #cv-close{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:clamp(10px,1.1vw,13px);padding:.42em 1.2em;border-radius:20px;cursor:pointer;transition:background .2s;white-space:nowrap}
 #cv-close:hover{background:rgba(255,255,255,.26)}
 
@@ -141,8 +138,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .rarity-4 .char-rarity{color:#c678dd}
 .rarity-5 .char-rarity{color:#ffd700}
 .rarity-6 .char-rarity{color:#ff5555}
-.rarity-7 .char-rarity{animation:textSparkle 2s ease-in-out infinite}
-.char-card.rarity-7.owned{animation:borderSparkle 2s ease-in-out infinite;z-index:2}
+.rarity-7 .char-rarity{color:#ff00ff}
 .pic-fallback{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(45deg,#2a2a35,#1a1a25);border-radius:4px;color:rgba(255,255,255,.5);font-size:clamp(10px,1vw,14px);font-weight:bold}
 
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
@@ -250,32 +246,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pill-r6 .pill-rarity { color: #ff6666; }
 .pill-r6:hover { box-shadow: 0 12px 36px rgba(255,68,68,.9); border-color: #ff9999; }
 
-.pill-r7 { animation:borderSparkle 2s ease-in-out infinite; }
-.pill-r7 .pill-rarity { animation:textSparkle 2s ease-in-out infinite; background:rgba(0,0,0,.85); }
-.pill-r7:hover { animation:sparkleGlow 1.5s ease-in-out infinite; z-index:3; }
-
-.remember-btn {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: linear-gradient(135deg, #e040fb, #00ffff);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 3px 6px;
-  font-size: clamp(7px, 0.9vw, 11px);
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 99;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-.remember-btn:hover {
-  transform: scale(1.06);
-  background: linear-gradient(135deg, #00ffff, #e040fb);
-}
+.pill-r7 { border-color: #ff00ff; }
+.pill-r7 .pill-rarity { color: #ff00ff; }
+.pill-r7:hover { box-shadow: 0 15px 40px rgba(255,0,255,1); border-color: #ff99ff; }
 
 @media screen and (max-width: 768px), screen and (max-height: 450px) {
   #summary-layer { padding: 10px; justify-content: center; gap: 8px; }
@@ -338,11 +311,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
     <div id="dev-rates-config" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100; padding: 15px; background: rgba(0,0,0,0.85); border: 1px solid #ffd700; border-radius: 12px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
       <h4 style="color:#ffd700; margin-bottom:12px; font-size:15px; text-transform: uppercase; letter-spacing: 1px;">🛠 Dev Panel: Tỉ lệ Gacha</h4>
       <div style="display:flex; flex-direction: column; gap:8px; font-size:13px; color: #fff;">
-        <label style="display: flex; justify-content: space-between;">Tỉ lệ 3★: <input type="number" id="dev-rate-3" value="94.27" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
-        <label style="display: flex; justify-content: space-between;">Tỉ lệ 4★: <input type="number" id="dev-rate-4" value="5.1" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
-        <label style="display: flex; justify-content: space-between;">Tỉ lệ 5★: <input type="number" id="dev-rate-5" value="0.6" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
-        <label style="display: flex; justify-content: space-between;">Tỉ lệ 6★: <input type="number" id="dev-rate-6" value="0.02" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
-        <label style="display: flex; justify-content: space-between;">Tỉ lệ 7★: <input type="number" id="dev-rate-7" value="0.01" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 3★: <input type="number" id="dev-rate-3" value="85" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 4★: <input type="number" id="dev-rate-4" value="10" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 5★: <input type="number" id="dev-rate-5" value="4" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 6★: <input type="number" id="dev-rate-6" value="0.8" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
+        <label style="display: flex; justify-content: space-between;">Tỉ lệ 7★: <input type="number" id="dev-rate-7" value="0.2" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.1">%</label>
       </div>
       <button onclick="applyDevRates()" style="margin-top:15px; width: 100%; padding:8px 12px; background:linear-gradient(135deg, #4CAF50, #2E7D32); color:white; font-weight: bold; border:none; border-radius:6px; cursor:pointer;">LƯU TỈ LỆ MỚI</button>
       <div id="rate-msg" style="color:#00ff00; margin-top:8px; font-size:12px; text-align:center; display:none;">✅ Đã lưu thành công!</div>
@@ -519,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const P_PIC='pic/',P_SFX='sfx/',P_ROLL='roll/',P_CHAR='char/';
 function imgSrc(id){return P_PIC+id+'.png';}
 function charSrc(id){return P_CHAR+id+'.mp4';}
-function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:r===6?4:5)+'.mp4';}
+function rollSrc(r){return P_ROLL+'a'+(r===3?1:r===4?2:r===5?3:4)+'.mp4';}
 
 const CHAR_DATABASE = [];
 
@@ -528,7 +501,6 @@ for(let i=38; i<=44; i++) CHAR_DATABASE.push({ id: String(i), rar: 4 });
 for(let i=45; i<=50; i++) CHAR_DATABASE.push({ id: String(i), rar: 5 });
 CHAR_DATABASE.push({ id: '51', rar: 6 });
 CHAR_DATABASE.push({ id: '52', rar: 6 });
-CHAR_DATABASE.push({ id: 'BaoAnh', rar: 7 });
 
 const rarityMap = {};
 CHAR_DATABASE.forEach(c => rarityMap[c.id] = c.rar);
@@ -545,7 +517,7 @@ let pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
 
 const PITY4=10, PITY5=90, MAX_DUP=6;
 
-const DEFAULT_RATES = { r3: 94.27, r4: 5.1, r5: 0.6, r6: 0.02, r7: 0.01 };
+const DEFAULT_RATES = { r3: 85.0, r4: 10.0, r5: 4.0, r6: 0.8, r7: 0.2 };
 let currentRates = { ...DEFAULT_RATES };
 
 let p4=0,p5=0,rolls=0,owned={},got6=false,isDev=false;
@@ -629,33 +601,30 @@ function setLP(p,m){loadFill.style.width=Math.min(100,p)+'%';loadText.textConten
 function loadImg(src){
     return new Promise(r=>{
         const i=new Image();
-        i.onload=()=>r(true);
-        i.onerror=()=>r(false);
+        let settled = false;
+        const finish = (ok) => {
+            if(!settled) { settled = true; r(ok); }
+        };
+        i.onload=()=>finish(true);
+        i.onerror=()=>finish(false);
         i.src=src;
+        setTimeout(()=>finish(false), 800);
     });
 }
 
 const vidCache={};
-function preloadVideo(src) {
-    return new Promise(r => {
-        if (vidCache[src]) return r(true);
-        vidCache[src] = 'pending';
-        fetch(src)
-            .then(res => {
-                if (!res.ok) throw new Error();
-                return res.blob();
-            })
-            .then(() => {
-                vidCache[src] = 'ready';
-                r(true);
-            })
-            .catch(() => {
-                vidCache[src] = 'error';
-                const m = src.match(/char\/(.+)\.mp4/);
-                if (m) removeInvalidChar(m[1]);
-                r(false);
-            });
-    });
+function preloadVideo(src){
+  if(vidCache[src]) return;
+  vidCache[src]='pending';
+  const v=document.createElement('video');
+  v.preload='auto'; v.src=src; v.muted=true;
+  v.oncanplaythrough=()=>{vidCache[src]='ready';};
+  v.onerror=()=>{
+      vidCache[src]='error';
+      const m = src.match(/char\/(.+)\.mp4/);
+      if(m) removeInvalidChar(m[1]);
+  };
+  v.load();
 }
 
 function imgChar2(id){ return 'char2/'+id+'b.png'; }
@@ -668,43 +637,34 @@ async function runPreload(){
       let checked = 0;
       for (let i = 0; i < allIds.length; i += 10) {
           const chunk = allIds.slice(i, i + 10);
-          await Promise.all(chunk.map(id => loadImg(imgChar2(id)).then(ok => {
+          await Promise.all(chunk.map(async id => {
+              const ok = await loadImg(imgChar2(id));
               if(!ok) removeInvalidChar(id);
-          })));
+          }));
           checked += chunk.length;
           setLP(5 + (checked / allIds.length) * 35, 'Đang kiểm tra... ' + Math.round((checked / allIds.length) * 100) + '%');
       }
 
-      setLP(40, 'Đang tải ảnh...');
       const priority=[P_PIC+'bg.png'];
       const validIds = getCharList();
+      
       validIds.slice(0, 8).forEach(id => priority.push(imgChar2(id)));
       
       let done=0;
-      await Promise.all(priority.map(u => loadImg(u).then(() => {
+      for(const u of priority){
+          await loadImg(u);
           done++;
           setLP(40+(done/priority.length)*20);
-      })));
+      }
 
-      setLP(60,'Tải tệp tin hệ thống...');
-      const rollVids = [3,4,5,6,7].map(r => rollSrc(r));
-      done = 0;
-      await Promise.all(rollVids.map(u => preloadVideo(u).then(() => {
-          done++;
-          setLP(60+(done/rollVids.length)*25);
-      })));
-
-      setLP(85,'Chuẩn bị video nhân vật...');
-      const charVids = validIds.slice(0, 5).map(id => charSrc(id));
-      done = 0;
-      await Promise.all(charVids.map(u => preloadVideo(u).then(() => {
-          done++;
-          setLP(85+(done/charVids.length)*15);
-      })));
+      setLP(70,'Chuẩn bị video...');
+      [3,4,5,6].forEach(r=>preloadVideo(rollSrc(r)));
+      validIds.slice(0, 5).forEach(id => preloadVideo(charSrc(id)));
 
       setLP(100,'Sẵn sàng!');
-      await new Promise(r=>setTimeout(r,400));
+      await new Promise(r=>setTimeout(r,220));
   } catch (e) {
+      console.error("Lỗi:", e);
   } finally {
       document.getElementById('loading-overlay').classList.add('hidden');
       setTimeout(()=>{const o=document.getElementById('loading-overlay');if(o)o.style.display='none';},520);
@@ -1101,17 +1061,6 @@ function showSummary(sorted){
       openCharViewer(id);
     };
 
-    if(id === '51'){
-      const remBtn = document.createElement('button');
-      remBtn.className = 'remember-btn';
-      remBtn.textContent = 'Remember';
-      remBtn.onclick = function(e){
-        e.stopPropagation();
-        window.location.href = 'album/index.html';
-      };
-      div.appendChild(remBtn);
-    }
-
     const img=document.createElement('img');
     img.src=imgSrc(id); img.alt=id;
     img.onerror=function(){
@@ -1141,17 +1090,6 @@ function renderCollection(){
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
     div.onclick=function(){ openCharViewer(id); };
-
-    if(id === '51' && cnt > 0){
-      const remBtn = document.createElement('button');
-      remBtn.className = 'remember-btn';
-      remBtn.textContent = 'Remember';
-      remBtn.onclick = function(e){
-        e.stopPropagation();
-        window.location.href = 'album/index.html';
-      };
-      div.appendChild(remBtn);
-    }
 
     const img=document.createElement('img');
     img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
