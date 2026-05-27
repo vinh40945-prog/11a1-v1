@@ -254,6 +254,29 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 .pill-r7 .pill-rarity { animation:textSparkle 2s ease-in-out infinite; background:rgba(0,0,0,.85); }
 .pill-r7:hover { animation:sparkleGlow 1.5s ease-in-out infinite; z-index:3; }
 
+.remember-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: linear-gradient(135deg, #e040fb, #00ffff);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: clamp(7px, 0.9vw, 11px);
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 99;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.remember-btn:hover {
+  transform: scale(1.06);
+  background: linear-gradient(135deg, #00ffff, #e040fb);
+}
+
 @media screen and (max-width: 768px), screen and (max-height: 450px) {
   #summary-layer { padding: 10px; justify-content: center; gap: 8px; }
   #summary-title { margin-top: 0; margin-bottom: 0; font-size: 11px; }
@@ -1079,6 +1102,17 @@ function showSummary(sorted){
       openCharViewer(id);
     };
 
+    if(id === '51'){
+      const remBtn = document.createElement('button');
+      remBtn.className = 'remember-btn';
+      remBtn.textContent = 'Remember';
+      remBtn.onclick = function(e){
+        e.stopPropagation();
+        window.location.href = 'album/index.html';
+      };
+      div.appendChild(remBtn);
+    }
+
     const img=document.createElement('img');
     img.src=imgSrc(id); img.alt=id;
     img.onerror=function(){
@@ -1108,6 +1142,17 @@ function renderCollection(){
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
     div.onclick=function(){ openCharViewer(id); };
+
+    if(id === '51' && cnt > 0){
+      const remBtn = document.createElement('button');
+      remBtn.className = 'remember-btn';
+      remBtn.textContent = 'Remember';
+      remBtn.onclick = function(e){
+        e.stopPropagation();
+        window.location.href = 'album/index.html';
+      };
+      div.appendChild(remBtn);
+    }
 
     const img=document.createElement('img');
     img.src=imgChar2(id); img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
