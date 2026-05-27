@@ -9,7 +9,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
 
-#dev-rates-config{position:fixed!important;z-index:99999!important;cursor:move;touch-action:none;user-select:none}
+#dev-rates-config{position:fixed!important;z-index:99999!important;cursor:move;touch-action:none;user-select:none;max-height:90vh;overflow-y:auto;}
+#dev-rates-config::-webkit-scrollbar{width:4px}
+#dev-rates-config::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.4);border-radius:2px}
 #dev-minimize-btn{position:absolute;top:6px;right:6px;width:22px;height:22px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .2s ease;z-index:10}
 #dev-minimize-btn:hover{background:#ff4444;border-color:#ff6666}
 
@@ -39,7 +41,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 
 #bg{position:absolute;inset:0;z-index:0;background:url('pic/bg.png') center center/contain no-repeat;background-color:#000;transition:opacity .3s}
-@media (orientation:landscape){#bg{background-size:cover}}
+@with (orientation:landscape){#bg{background-size:cover}}
 #bg.hidden{opacity:0}
 
 #stage{position:relative;z-index:1;overflow:hidden;flex-shrink:0}
@@ -339,8 +341,8 @@ Cập nhật texture của một số nhân vật và animation</div>
       <button id="collection-toggle" class="btn-ghost" onclick="toggleCollection()">👜 BST</button>
     </div>
 
-    <div id="dev-rates-config" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100; padding: 15px; background: rgba(0,0,0,0.85); border: 1px solid #ffd700; border-radius: 12px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-      <h4 style="color:#ffd700; margin-bottom:12px; font-size:15px; text-transform: uppercase; letter-spacing: 1px;">🛠 Dev Panel: Tỉ lệ Gacha</h4>
+    <div id="dev-rates-config" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100; padding: 15px; background: rgba(0,0,0,0.85); border: 1px solid #ffd700; border-radius: 12px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.8); width:240px;">
+      <h4 style="color:#ffd700; margin-bottom:12px; font-size:14px; text-transform: uppercase; letter-spacing: 1px;">🛠 Dev Panel: Tỉ lệ Gacha</h4>
       <div style="display:flex; flex-direction: column; gap:8px; font-size:13px; color: #fff;">
         <label style="display: flex; justify-content: space-between;">Tỉ lệ 3★: <input type="number" id="dev-rate-3" value="94.27" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
         <label style="display: flex; justify-content: space-between;">Tỉ lệ 4★: <input type="number" id="dev-rate-4" value="5.1" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
@@ -348,8 +350,30 @@ Cập nhật texture của một số nhân vật và animation</div>
         <label style="display: flex; justify-content: space-between;">Tỉ lệ 6★: <input type="number" id="dev-rate-6" value="0.02" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
         <label style="display: flex; justify-content: space-between;">Tỉ lệ 7★: <input type="number" id="dev-rate-7" value="0.01" style="width:60px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius: 4px;" step="0.01">%</label>
       </div>
-      <button onclick="applyDevRates()" style="margin-top:15px; width: 100%; padding:8px 12px; background:linear-gradient(135deg, #4CAF50, #2E7D32); color:white; font-weight: bold; border:none; border-radius:6px; cursor:pointer;">LƯU TỈ LỆ MỚI</button>
-      <div id="rate-msg" style="color:#00ff00; margin-top:8px; font-size:12px; text-align:center; display:none;">✅ Đã lưu thành công!</div>
+      <button onclick="applyDevRates()" style="margin-top:12px; width: 100%; padding:8px 12px; background:linear-gradient(135deg, #4CAF50, #2E7D32); color:white; font-weight: bold; border:none; border-radius:6px; cursor:pointer; font-size:12px;">LƯU TỈ LỆ MỚI</button>
+      <div id="rate-msg" style="color:#00ff00; margin-top:6px; font-size:12px; text-align:center; display:none;">✅ Đã lưu thành công!</div>
+
+      <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">
+        <h5 style="color:#ffd700; margin-bottom:8px; font-size:12px; text-transform: uppercase; letter-spacing: 0.5px;">⭐ Nhận nhanh theo Sao</h5>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+          <button onclick="devOwnByRarity(3)" style="padding:5px; background:#333; color:#fff; border:1px solid #666; border-radius:4px; cursor:pointer; font-size:11px;">Mở 3★</button>
+          <button onclick="devOwnByRarity(4)" style="padding:5px; background:#c678dd; color:#fff; border:1px solid #a658bd; border-radius:4px; cursor:pointer; font-size:11px;">Mở 4★</button>
+          <button onclick="devOwnByRarity(5)" style="padding:5px; background:#ffd700; color:#000; font-weight:bold; border:1px solid #cca700; border-radius:4px; cursor:pointer; font-size:11px;">Mở 5★</button>
+          <button onclick="devOwnByRarity(6)" style="padding:5px; background:#ff4444; color:#fff; border:1px solid #d43333; border-radius:4px; cursor:pointer; font-size:11px;">Mở 6★</button>
+          <button onclick="devOwnByRarity(7)" style="padding:5px; background:linear-gradient(45deg, #ff00ff, #00ffff); color:#000; font-weight:bold; border:none; border-radius:4px; cursor:pointer; font-size:11px;">Mở 7★</button>
+          <button onclick="devClearAllOwned()" style="padding:5px; background:#555; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:11px;">Xóa hết</button>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">
+        <h5 style="color:#ffd700; margin-bottom:6px; font-size:12px; text-transform: uppercase; letter-spacing: 0.5px;">📊 Chỉnh sửa thông số</h5>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:11px; color:#fff;">
+          <label style="display:flex; justify-content:space-between; align-items:center;">Pity 4★: <input type="number" id="dev-p4-input" style="width:55px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius:4px;"></label>
+          <label style="display:flex; justify-content:space-between; align-items:center;">Pity 5★: <input type="number" id="dev-p5-input" style="width:55px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius:4px;"></label>
+          <label style="display:flex; justify-content:space-between; align-items:center;">Tổng Roll: <input type="number" id="dev-rolls-input" style="width:55px; background:#222; color:#fff; border:1px solid #555; text-align:center; border-radius:4px;"></label>
+          <button onclick="devUpdateStats()" style="width:100%; padding:6px; background:#2196F3; color:white; font-weight:bold; border:none; border-radius:4px; cursor:pointer; margin-top:4px;">ÁP DỤNG THÔNG SỐ</button>
+        </div>
+      </div>
     </div>
 
     <div id="pity-modal">
@@ -366,8 +390,9 @@ Cập nhật texture của một số nhân vật và animation</div>
           <div class="pity-bar-wrap"><div class="pity-bar bar5" id="pm-bar5" style="width:0%"></div></div>
         </div></div>
         <div class="pity-row"><span class="pity-label">5★ sở hữu</span><span class="pity-val" id="pm-5count">0/6</span></div>
-        <div class="pity-row"><span class="pity-label">6★ sở hữu</span><span class="pity-val" id="pm-6own">Chưa</span></div>
-        <div class="pity-note">4★ mỗi 10 lần · 5★ mỗi 90 lần · 6★ bí ẩn / khi có đủ 5★</div>
+        <div class="pity-row"><span class="pity-label">6★ sở hữu</span><span class="pity-val" id="pm-6count">0/2</span></div>
+        <div class="pity-row"><span class="pity-label">7★ sở hữu</span><span class="pity-val" id="pm-7own">Chưa</span></div>
+        <div class="pity-note">4★ mỗi 10 lần · 5★ mỗi 90 lần · 6★ khi đủ 5★ · 7★ khi đủ 6★</div>
       </div>
     </div>
 
@@ -564,13 +589,14 @@ const PITY4=10, PITY5=90, MAX_DUP=6;
 const DEFAULT_RATES = { r3: 94.27, r4: 5.1, r5: 0.6, r6: 0.02, r7: 0.01 };
 let currentRates = { ...DEFAULT_RATES };
 
-let p4=0,p5=0,rolls=0,owned={},got6=false,isDev=false;
+let p4=0,p5=0,rolls=0,owned={},got6=false,got7=false,isDev=false;
 (function(){try{const d=JSON.parse(localStorage.getItem('gv5')||'{}');
-  p4=d.p4||0;p5=d.p5||0;rolls=d.t||0;owned=d.o||{};got6=d.h||false;isDev=d.d||false;}catch(e){}})();
-function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6,d:isDev}));}catch(e){}}
+  p4=d.p4||0;p5=d.p5||0;rolls=d.t||0;owned=d.o||{};got6=d.h||false;got7=d.h7||false;isDev=d.d||false;}catch(e){}})();
+function save(){try{localStorage.setItem('gv5',JSON.stringify({p4,p5,t:rolls,o:owned,h:got6,h7:got7,d:isDev}));}catch(e){}}
 
 if (isDev) {
     document.getElementById('dev-rates-config').style.display = 'block';
+    setTimeout(syncDevInputs, 200);
 }
 
 function getCharList() {
@@ -589,6 +615,7 @@ function r3(){ return getRollId(pool3, pool3[0] || "1"); }
 function r4(){ return getRollId(pool4, r3()); }
 function r5(){ return getRollId(pool5, r4()); }
 function r6(){ return getRollId(pool6, r5()); }
+function r7(){ return getRollId(pool7, r6()); }
 
 const BG=document.getElementById('bg');
 const videoLayer=document.getElementById('video-layer');
@@ -753,7 +780,7 @@ function doReset(){
       devBubble.style.display = 'none';
   }
 
-  p4=0; p5=0; rolls=0; owned={}; got6=false; isDev=false;
+  p4=0; p5=0; rolls=0; owned={}; got6=false; got7=false; isDev=false;
   save();
   closeReset();
 
@@ -779,6 +806,7 @@ function doReset(){
 document.getElementById('reset-modal').addEventListener('click',function(e){if(e.target===this)closeReset();});
 
 function all5(){return pool5.length > 0 && pool5.every(x=>(owned[x]||0)>0);}
+function all6(){return pool6.length > 0 && pool6.every(x=>(owned[x]||0)>0);}
 
 function openPity(){
   document.getElementById('pm-total').textContent=rolls;
@@ -787,7 +815,8 @@ function openPity(){
   document.getElementById('pm-bar4').style.width=Math.min(100,p4/PITY4*100)+'%';
   document.getElementById('pm-bar5').style.width=Math.min(100,p5/PITY5*100)+'%';
   document.getElementById('pm-5count').textContent=pool5.filter(x=>(owned[x]||0)>0).length+'/'+(pool5.length || 1);
-  document.getElementById('pm-6own').textContent=got6?'✅ Có':'Chưa';
+  document.getElementById('pm-6count').textContent=pool6.filter(x=>(owned[x]||0)>0).length+'/'+(pool6.length || 1);
+  document.getElementById('pm-7own').textContent=got7?'✅ Có':'Chưa';
   document.getElementById('pity-modal').classList.add('visible');
 }
 function closePity(){document.getElementById('pity-modal').classList.remove('visible');}
@@ -796,14 +825,15 @@ document.getElementById('pity-modal').addEventListener('click',function(e){if(e.
 function pickOne(){
   rolls++;p4++;p5++;
 
-  if(!got6&&all5() && pool6.length > 0){got6=true;p4=0;p5=0;return r6();} 
+  if(!got7&&all6()&&pool7.length>0){got7=true;p4=0;p5=0;return r7();}
+  if(!got6&&all5()&&pool6.length>0){got6=true;p4=0;p5=0;return r6();}
   if(p5>=PITY5){p5=0;p4=0;return r5();}
   if(p4>=PITY4){p4=0;return r4();}
   
   const totalRate = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
   const r = Math.random() * totalRate;
 
-  if (r < currentRates.r7) return pool7.length > 0 ? getRollId(pool7, r6()) : r6();
+  if (r < currentRates.r7) return r7();
   if (r < currentRates.r7 + currentRates.r6) return r6();
   if (r < currentRates.r7 + currentRates.r6 + currentRates.r5) { p5=0; p4=0; return r5(); }
   if (r < currentRates.r7 + currentRates.r6 + currentRates.r5 + currentRates.r4) { p4=0; return r4(); }
@@ -1071,19 +1101,54 @@ function hiddenDevTrigger() {
             pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
             pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
 
-            CHAR_DATABASE.forEach(c => {
-                owned[c.id] = MAX_DUP;
-            });
-            
-            got6 = true;
+            syncDevInputs();
             save();
             renderCollection();
-            alert("✨ Đã mở khóa quyền Nhà phát triển thành công! Bảng tùy chỉnh tỉ lệ Gacha đã được bật.");
+            alert("✨ Kích hoạt Nhà phát triển! Bạn có thể click trực tiếp vào từng nhân vật trong bộ sưu tập để chọn sở hữu.");
         } else if (code !== null) {
             alert("❌ Mã xác thực không chính xác!");
         }
     }
     devClickTimer = setTimeout(() => { devClicks = 0; }, 2000);
+}
+
+function syncDevInputs() {
+  const ip4 = document.getElementById('dev-p4-input');
+  const ip5 = document.getElementById('dev-p5-input');
+  const iroll = document.getElementById('dev-rolls-input');
+  if(ip4) ip4.value = p4;
+  if(ip5) ip5.value = p5;
+  if(iroll) iroll.value = rolls;
+}
+
+function devOwnByRarity(rarity) {
+  CHAR_DATABASE.forEach(c => {
+    if (c.rar === rarity) {
+      owned[c.id] = MAX_DUP;
+    }
+  });
+  if (rarity === 6) got6 = true;
+  save();
+  renderCollection();
+}
+
+function devClearAllOwned() {
+  owned = {};
+  got6 = false;
+  got7 = false;
+  save();
+  renderCollection();
+}
+
+function devUpdateStats() {
+  const inp4 = parseInt(document.getElementById('dev-p4-input').value);
+  const inp5 = parseInt(document.getElementById('dev-p5-input').value);
+  const inRolls = parseInt(document.getElementById('dev-rolls-input').value);
+  if(!isNaN(inp4)) p4 = Math.max(0, Math.min(inp4, PITY4));
+  if(!isNaN(inp5)) p5 = Math.max(0, Math.min(inp5, PITY5));
+  if(!isNaN(inRolls)) rolls = Math.max(0, inRolls);
+  save();
+  alert("✅ Cập nhật thông số thành công!");
 }
 
 function closeVideo(){
@@ -1145,7 +1210,30 @@ function renderCollection(){
     const cnt=owned[id]||0,rar=rarityOf(id);
     const div=document.createElement('div');
     div.className='char-card rarity-'+rar+' '+(cnt>0?'owned':'not-owned');
-    div.onclick=function(){ openCharViewer(id,this); };
+    
+    div.onclick=function(){ 
+      if(isDev) {
+        let currentCnt = owned[id] || 0;
+        if(currentCnt === 0) {
+          owned[id] = 1;
+        } else if(currentCnt === 1) {
+          owned[id] = MAX_DUP;
+        } else {
+          delete owned[id];
+        }
+        got6 = pool6.some(x => (owned[x]||0) > 0);
+        save();
+        renderCollection();
+      } else {
+        openCharViewer(id,this); 
+      }
+    };
+
+    div.ondblclick=function(){
+      if(isDev && (owned[id]||0) > 0) {
+        openCharViewer(id,this);
+      }
+    };
 
     if(id === '51' && cnt > 0){
       const remBtn = document.createElement('button');
