@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>11a1 cute dữ</title>
+<title>Gacha Roll</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;touch-action:none}
@@ -41,7 +41,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 
 #bg{position:absolute;inset:0;z-index:0;background:url('pic/bg.png') center center/contain no-repeat;background-color:#000;transition:opacity .3s}
-@with (orientation:landscape){#bg{background-size:cover}}
+@media (orientation:landscape){#bg{background-size:cover}}
 #bg.hidden{opacity:0}
 
 #stage{position:relative;z-index:1;overflow:hidden;flex-shrink:0}
@@ -106,34 +106,38 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(65px,7.5%,105px),1fr));gap:clamp(4px,.65%,9px);overflow-y:auto;flex:1;padding-right:4px}
 #col-grid::-webkit-scrollbar{width:3px}
 #col-grid::-webkit-scrollbar-thumb{background:rgba(255,215,0,.32);border-radius:2px}
+
 .char-card{background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.1);padding:5px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
 .char-card:hover{transform:scale(1.06);box-shadow:0 4px 18px rgba(0,0,0,.5)}
 .char-card.owned:hover{border-color:rgba(255,215,0,.9);box-shadow:0 4px 20px rgba(255,215,0,.3)}
 
-#char-viewer{position:absolute;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:transparent;transition:background .3s}
-#char-viewer.open{display:flex;background:rgba(0,0,0,.82)}
-#cv-inner{position:relative;width:min(78%,calc(78vh*16/9));opacity:0;transform:translate(var(--cv-sx,0px),var(--cv-sy,0px)) scale(var(--cv-ss,.82));transition:opacity .35s cubic-bezier(.34,1.56,.64,1),transform .35s cubic-bezier(.34,1.56,.64,1)}
-#char-viewer.open #cv-inner{opacity:1;transform:translate(0,0) scale(1)}
+#char-viewer{position:absolute;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:transparent;transition:background 0.4s ease}
+#char-viewer.open{display:flex;background:rgba(0,0,0,.88)}
 
+#cv-inner{position:fixed;overflow:hidden;background:#000;border-radius:8px;will-change:top,left,width,height,border-radius,box-shadow}
 #cv-inner.glow-3{box-shadow:0 0 0 2px #7080a0,0 0 28px rgba(112,128,160,.4)}
 #cv-inner.glow-4{box-shadow:0 0 0 2px #c678dd,0 0 36px rgba(198,120,221,.55)}
 #cv-inner.glow-5{box-shadow:0 0 0 2px #ffd700,0 0 44px rgba(255,215,0,.6)}
 #cv-inner.glow-6{box-shadow:0 0 0 2px #ff4444,0 0 52px rgba(255,68,68,.7)}
 #cv-inner.glow-7{animation:sparkleGlow 2s ease-in-out infinite}
-#cv-inner{border-radius:12px;overflow:hidden}
 
-#cv-video{width:100%;aspect-ratio:16/9;display:block;background:#000;object-fit:contain}
-#cv-footer{background:rgba(4,2,16,.88);padding:clamp(6px,1.2%,12px) clamp(10px,2%,20px);display:flex;align-items:center;justify-content:space-between;gap:8px}
+#cv-transition-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;transition:opacity 0.3s ease}
+#cv-video{position:relative;width:100%;height:100%;display:block;background:transparent;object-fit:contain;z-index:2;opacity:0;transition:opacity 0.3s ease}
+
+#cv-footer{position:absolute;bottom:0;left:0;width:100%;background:rgba(4,2,16,.88);padding:clamp(6px,1.2%,12px) clamp(10px,2%,20px);display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:3;opacity:0;transition:opacity 0.3s ease;pointer-events:none}
+#char-viewer.open #cv-footer{opacity:1;transition-delay:0.2s;pointer-events:auto}
+
 #cv-rarity{font-size:clamp(11px,1.3vw,16px);font-weight:800;letter-spacing:1px}
 #cv-count{font-size:clamp(10px,1.1vw,13px);opacity:.7;color:#fff}
 .cv-r3{color:#a0b0d0}.cv-r4{color:#e090ff}.cv-r5{color:#ffd700}.cv-r6{color:#ff6666}.cv-r7{animation:textSparkle 2s ease-in-out infinite}
 #cv-close{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:clamp(10px,1.1vw,13px);padding:.42em 1.2em;border-radius:20px;cursor:pointer;transition:background .2s;white-space:nowrap}
 #cv-close:hover{background:rgba(255,255,255,.26)}
 
-#cv-spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:none;opacity:0;transition:opacity .15s;font-size:clamp(20px,4%,36px)}
+#cv-spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:none;opacity:0;transition:opacity .15s;font-size:clamp(20px,4%,36px);z-index:4}
 #cv-spinner.show{opacity:1}
 @keyframes spin{to{transform:rotate(360deg)}}
 #cv-spinner span{display:inline-block;animation:spin .8s linear infinite}
+
 .char-card.owned{border-color:rgba(255,215,0,.52)}
 .char-card.not-owned{opacity:.85}
 .char-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;display:block}
@@ -150,7 +154,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #video-layer{position:absolute;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center}
 #video-layer.active{display:flex}
 #gacha-video{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:center center;display:block;background:#000;opacity:0;transition:opacity .2s;transform:translateZ(0);will-change:opacity}
-
 #video-tap{position:absolute;inset:0;z-index:58;cursor:pointer;display:none}
 #video-tap.active{display:block}
 
@@ -158,126 +161,39 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;f
 #skip-btn.visible{opacity:1;pointer-events:auto}
 #skip-btn:hover{background:rgba(255,255,255,.22)}
 
-#summary-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 55;
-  background: rgba(4,2,16,.94);
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; 
-  gap: clamp(6px, 1.5vh, 16px); 
-  padding: 30px 10px; 
-  box-sizing: border-box;
-  overflow-y: auto; 
-}
+#summary-layer {position: absolute;inset: 0;z-index: 55;background: rgba(4,2,16,.94);display: none;flex-direction: column;align-items: center;justify-content: flex-start;gap: clamp(6px, 1.5vh, 16px);padding: 30px 10px;box-sizing: border-box;overflow-y: auto;}
 #summary-layer.active { display: flex; }
-
-#summary-title {
-  color: rgba(255,255,255,.6);
-  font-size: clamp(10px, 1.3vw, 15px);
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255,255,255,0.2);
-  margin-top: auto; 
-}
-
-#summary-pills {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(4px, 1vw, 8px); 
-  flex-wrap: wrap; 
-  width: 100%;
-  max-width: 650px; 
-}
-
-#summary-close-btn {
-  background: rgba(255,255,255,.11);
-  border: 1px solid rgba(255,255,255,.28);
-  color: #fff;
-  font-size: clamp(10px, 1.2vw, 14px);
-  padding: .5em 2.2em;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background .2s, transform .2s;
-  margin-top: 10px;
-  margin-bottom: auto;
-  flex-shrink: 0;
-}
+#summary-title {color: rgba(255,255,255,.6);font-size: clamp(10px, 1.3vw, 15px);letter-spacing: 4px;text-transform: uppercase;text-shadow: 0 0 10px rgba(255,255,255,0.2);margin-top: auto;}
+#summary-pills {display: flex;flex-direction: row;align-items: center;justify-content: center;gap: clamp(4px, 1vw, 8px);flex-wrap: wrap;width: 100%;max-width: 650px;}
+#summary-close-btn {background: rgba(255,255,255,.11);border: 1px solid rgba(255,255,255,.28);color: #fff;font-size: clamp(10px, 1.2vw, 14px);padding: .5em 2.2em;border-radius: 30px;cursor: pointer;transition: background .2s, transform .2s;margin-top: 10px;margin-bottom: auto;flex-shrink: 0;}
 #summary-close-btn:hover { background: rgba(255,255,255,.24); transform: scale(1.05); }
 
-.pill-card {
-  flex: 0 1 calc(20% - 8px);
-  max-width: 90px; 
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  border-radius: clamp(6px, 2vw, 16px);
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,.16);
-  position: relative;
-  cursor: pointer; 
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  opacity: 0;
-  transform: translateY(40px) scale(.82);
-  transition: opacity .5s cubic-bezier(.175, .885, .32, 1.275), transform .5s cubic-bezier(.175, .885, .32, 1.275), border-color .25s ease, box-shadow .25s ease;
-}
+.pill-card {flex: 0 1 calc(20% - 8px);max-width: 90px;display: flex;flex-direction: column;align-items: stretch;border-radius: clamp(6px, 2vw, 16px);overflow: hidden;border: 2px solid rgba(255,255,255,.16);position: relative;cursor: pointer;user-select: none;-webkit-tap-highlight-color: transparent;opacity: 0;transform: translateY(40px) scale(.82);transition: opacity .5s cubic-bezier(.175, .885, .32, 1.275), transform .5s cubic-bezier(.175, .885, .32, 1.275), border-color .25s ease, box-shadow .25s ease;}
 .pill-card.show { opacity: 1; transform: translateY(0) scale(1); }
-
 .pill-card:hover { transform: scale(1.08) translateY(-6px); border-color: rgba(255,255,255,0.75); z-index: 2; }
 .pill-card:active { transform: scale(0.96) translateY(-2px); transition: transform 0.1s ease; }
-
 .pill-card img, .pill-card .pic-fallback { width: 100%; height: auto; aspect-ratio: 9/16; object-fit: cover; display: block; transition: transform .3s ease; }
 .pill-card:hover img { transform: scale(1.04); }
 
 .pill-rarity { font-size: clamp(6px, 1.2vw, 10px); font-weight: 800; padding: clamp(2px, 0.8vh, 5px) 0; text-align: center; background: rgba(0,0,0,.75); letter-spacing: 1px; border-top: 1px solid rgba(255,255,255,0.05); }
-
 .pill-r3 { border-color: #7080a0; }
 .pill-r3 .pill-rarity { color: #a0b0d0; }
 .pill-r3:hover { box-shadow: 0 8px 20px rgba(112,128,160,.5); }
-
 .pill-r4 { border-color: #c678dd; }
 .pill-r4 .pill-rarity { color: #e090ff; }
 .pill-r4:hover { box-shadow: 0 10px 25px rgba(198,120,221,.75); border-color: #f1b6ff; }
-
 .pill-r5 { border-color: #ffd700; }
 .pill-r5 .pill-rarity { color: #ffd700; }
 .pill-r5:hover { box-shadow: 0 12px 32px rgba(255,215,0,.8); border-color: #fff2a3; }
-
 .pill-r6 { border-color: #ff4444; }
 .pill-r6 .pill-rarity { color: #ff6666; }
 .pill-r6:hover { box-shadow: 0 12px 36px rgba(255,68,68,.9); border-color: #ff9999; }
-
 .pill-r7 { animation:borderSparkle 2s ease-in-out infinite; }
 .pill-r7 .pill-rarity { animation:textSparkle 2s ease-in-out infinite; background:rgba(0,0,0,.85); }
 .pill-r7:hover { animation:sparkleGlow 1.5s ease-in-out infinite; z-index:3; }
 
-.remember-btn {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: linear-gradient(135deg, #e040fb, #00ffff);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 3px 6px;
-  font-size: clamp(7px, 0.9vw, 11px);
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 99;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-.remember-btn:hover {
-  transform: scale(1.06);
-  background: linear-gradient(135deg, #00ffff, #e040fb);
-}
+.remember-btn {position: absolute;top: 4px;left: 4px;background: linear-gradient(135deg, #e040fb, #00ffff);color: #fff;border: none;border-radius: 4px;padding: 3px 6px;font-size: clamp(7px, 0.9vw, 11px);font-weight: bold;cursor: pointer;z-index: 99;box-shadow: 0 2px 5px rgba(0,0,0,0.5);text-transform: uppercase;letter-spacing: 0.5px;transition: transform 0.15s ease, background 0.15s ease;}
+.remember-btn:hover {transform: scale(1.06);background: linear-gradient(135deg, #00ffff, #e040fb);}
 
 @media screen and (max-width: 768px), screen and (max-height: 450px) {
   #summary-layer { padding: 10px; justify-content: center; gap: 8px; }
@@ -412,6 +328,7 @@ Cập nhật texture của một số nhân vật và animation</div>
 
     <div id="char-viewer" onclick="cvClickOutside(event)">
       <div id="cv-inner">
+        <img id="cv-transition-img" alt="transition">
         <video id="cv-video" preload="auto" playsinline webkit-playsinline muted></video>
         <div id="cv-spinner"><span>⟳</span></div>
         <div id="cv-footer">
@@ -435,86 +352,47 @@ Cập nhật texture của một số nhân vật và animation</div>
 document.addEventListener("DOMContentLoaded", () => {
   const devPanel = document.getElementById('dev-rates-config');
   if (!devPanel) return;
-
   const minBtn = document.createElement('div');
   minBtn.id = 'dev-minimize-btn';
   minBtn.innerHTML = '➖';
   minBtn.title = 'Thu nhỏ thành bong bóng';
   devPanel.appendChild(minBtn);
-
   const bubble = document.createElement('div');
   bubble.id = 'dev-bubble';
   document.body.appendChild(bubble);
-
   devPanel.style.top = '15px';
   devPanel.style.right = '15px';
   bubble.style.top = '15px';
   bubble.style.right = '15px';
 
   function makeElementDraggable(element, isBubble = false, clickCallback = null) {
-    let isDragging = false;
-    let hasMoved = false;
-    let startX, startY, initialX, initialY;
-
+    let isDragging = false, hasMoved = false, startX, startY, initialX, initialY;
     element.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target === minBtn) {
-        return;
-      }
-
-      isDragging = true;
-      hasMoved = false;
-      
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target === minBtn) return;
+      isDragging = true; hasMoved = false;
       const rect = element.getBoundingClientRect();
-      initialX = rect.left;
-      initialY = rect.top;
-      
-      startX = e.clientX;
-      startY = e.clientY;
-      
-      element.style.right = 'auto';
-      element.style.bottom = 'auto';
-      element.style.left = `${initialX}px`;
-      element.style.top = `${initialY}px`;
-      
+      initialX = rect.left; initialY = rect.top;
+      startX = e.clientX; startY = e.clientY;
+      element.style.right = 'auto'; element.style.bottom = 'auto';
+      element.style.left = `${initialX}px`; element.style.top = `${initialY}px`;
       element.setPointerCapture(e.pointerId);
     });
-
     element.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-
-      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
-        hasMoved = true;
-      }
-      
-      let newX = initialX + dx;
-      let newY = initialY + dy;
-      
-      const maxX = window.innerWidth - element.offsetWidth;
-      const maxY = window.innerHeight - element.offsetHeight;
-      
-      newX = Math.max(0, Math.min(newX, maxX));
-      newY = Math.max(0, Math.min(newY, maxY));
-      
-      element.style.left = `${newX}px`;
-      element.style.top = `${newY}px`;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
+      let newX = Math.max(0, Math.min(initialX + dx, window.innerWidth - element.offsetWidth));
+      let newY = Math.max(0, Math.min(initialY + dy, window.innerHeight - element.offsetHeight));
+      element.style.left = `${newX}px`; element.style.top = `${newY}px`;
     });
-
     element.addEventListener('pointerup', (e) => {
       if (!isDragging) return;
-      isDragging = false;
-      element.releasePointerCapture(e.pointerId);
-      
-      if (isBubble && !hasMoved && clickCallback) {
-        clickCallback();
-      }
+      isDragging = false; element.releasePointerCapture(e.pointerId);
+      if (isBubble && !hasMoved && clickCallback) clickCallback();
     });
   }
 
   makeElementDraggable(devPanel);
-
   makeElementDraggable(bubble, true, () => {
     bubble.style.display = 'none';
     devPanel.style.display = 'block';
@@ -563,7 +441,6 @@ function setImgPng(imgEl,baseNoExt,onFail){
 }
 
 const CHAR_DATABASE = [];
-
 for(let i=1; i<=37; i++) CHAR_DATABASE.push({ id: String(i), rar: 3 });
 for(let i=38; i<=44; i++) CHAR_DATABASE.push({ id: String(i), rar: 4 });
 for(let i=45; i<=50; i++) CHAR_DATABASE.push({ id: String(i), rar: 5 });
@@ -574,9 +451,7 @@ CHAR_DATABASE.push({ id: 'BaoAnh', rar: 7 });
 const rarityMap = {};
 CHAR_DATABASE.forEach(c => rarityMap[c.id] = c.rar);
 
-function rarityOf(id) {
-    return rarityMap[id] || 3;
-}
+function rarityOf(id) { return rarityMap[id] || 3; }
 
 let pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
 let pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
@@ -585,7 +460,6 @@ let pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
 let pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
 
 const PITY4=10, PITY5=90, MAX_DUP=6;
-
 const DEFAULT_RATES = { r3: 94.27, r4: 5.1, r5: 0.6, r6: 0.02, r7: 0.01 };
 let currentRates = { ...DEFAULT_RATES };
 
@@ -626,7 +500,6 @@ const rollBtn=document.getElementById('roll-btn');
 const roll10Btn=document.getElementById('roll10-btn');
 const summaryLayer=document.getElementById('summary-layer');
 const summaryPills=document.getElementById('summary-pills');
-
 const summarySfx=new Audio(P_SFX+'sfx1.mp3');
 summarySfx.preload='auto';
 
@@ -678,14 +551,8 @@ function preloadVideo(src) {
                 if (!res.ok) throw new Error();
                 return res.blob();
             })
-            .then(() => {
-                vidCache[src] = 'ready';
-                r(true);
-            })
-            .catch(() => {
-                vidCache[src] = 'error';
-                r(false);
-            });
+            .then(() => { vidCache[src] = 'ready'; r(true); })
+            .catch(() => { vidCache[src] = 'error'; r(false); });
     });
 }
 
@@ -695,15 +562,12 @@ async function runPreload(){
   try {
       setLP(5, 'Đang quét dữ liệu nhân vật...');
       const allIds = CHAR_DATABASE.map(c => c.id);
-      
       let checked = 0;
       for (let i = 0; i < allIds.length; i += 10) {
           const chunk = allIds.slice(i, i + 10);
           await Promise.all(chunk.map(id => {
               const src = 'char2/' + id + 'b.png';
-              return loadImg(src).then(ok => {
-                  if(ok) char2FormatCache[id] = src;
-              });
+              return loadImg(src).then(ok => { if(ok) char2FormatCache[id] = src; });
           }));
           checked += chunk.length;
           setLP(5 + (checked / allIds.length) * 35, 'Đang kiểm tra... ' + Math.round((checked / allIds.length) * 100) + '%');
@@ -713,28 +577,18 @@ async function runPreload(){
       const priority=[P_PIC+'bg.png'];
       const validIds = getCharList();
       validIds.slice(0, 8).forEach(id => priority.push(imgChar2(id)));
-      
       let done=0;
-      await Promise.all(priority.map(u => loadImg(u).then(() => {
-          done++;
-          setLP(40+(done/priority.length)*20);
-      })));
+      await Promise.all(priority.map(u => loadImg(u).then(() => { done++; setLP(40+(done/priority.length)*20); })));
 
       setLP(60,'Tải tệp tin hệ thống...');
       const rollVids = [3,4,5,6,7].map(r => rollSrc(r));
       done = 0;
-      await Promise.all(rollVids.map(u => preloadVideo(u).then(() => {
-          done++;
-          setLP(60+(done/rollVids.length)*25);
-      })));
+      await Promise.all(rollVids.map(u => preloadVideo(u).then(() => { done++; setLP(60+(done/rollVids.length)*25); })));
 
       setLP(85,'Chuẩn bị video nhân vật...');
       const charVids = validIds.slice(0, 5).map(id => charSrc(id));
       done = 0;
-      await Promise.all(charVids.map(u => preloadVideo(u).then(() => {
-          done++;
-          setLP(85+(done/charVids.length)*15);
-      })));
+      await Promise.all(charVids.map(u => preloadVideo(u).then(() => { done++; setLP(85+(done/charVids.length)*15); })));
 
       setLP(100,'Sẵn sàng!');
       await new Promise(r=>setTimeout(r,400));
@@ -768,39 +622,23 @@ function closeReset(){document.getElementById('reset-modal').classList.remove('v
 
 function doReset(){
   currentRates = { ...DEFAULT_RATES };
-  ['3','4','5','6','7'].forEach(r => {
-    const input = document.getElementById('dev-rate-' + r);
-    if(input) input.value = DEFAULT_RATES['r' + r];
-  });
-  
+  ['3','4','5','6','7'].forEach(r => { const input = document.getElementById('dev-rate-' + r); if(input) input.value = DEFAULT_RATES['r' + r]; });
   document.getElementById('dev-rates-config').style.display = 'none';
-
   const devBubble = document.getElementById('dev-bubble');
-  if (devBubble) {
-      devBubble.style.display = 'none';
-  }
-
+  if (devBubble) devBubble.style.display = 'none';
   p4=0; p5=0; rolls=0; owned={}; got6=false; got7=false; isDev=false;
-  save();
-  closeReset();
-
+  save(); closeReset();
   pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
   pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
   pool5 = CHAR_DATABASE.filter(c => c.rar === 5).map(c => c.id);
   pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
   pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
-  for (let key in vidCache) {
-      delete vidCache[key];
-  }
-
+  for (let key in vidCache) delete vidCache[key];
   const overlay = document.getElementById('loading-overlay');
   overlay.style.display = 'flex';
-  
   requestAnimationFrame(() => {
       overlay.classList.remove('hidden');
-      setTimeout(() => {
-          runPreload();
-      }, 300);
+      setTimeout(() => { runPreload(); }, 300);
   });
 }
 document.getElementById('reset-modal').addEventListener('click',function(e){if(e.target===this)closeReset();});
@@ -824,20 +662,16 @@ document.getElementById('pity-modal').addEventListener('click',function(e){if(e.
 
 function pickOne(){
   rolls++;p4++;p5++;
-
   if(!got7&&all6()&&pool7.length>0){got7=true;p4=0;p5=0;return r7();}
   if(!got6&&all5()&&pool6.length>0){got6=true;p4=0;p5=0;return r6();}
   if(p5>=PITY5){p5=0;p4=0;return r5();}
   if(p4>=PITY4){p4=0;return r4();}
-  
   const totalRate = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
   const r = Math.random() * totalRate;
-
   if (r < currentRates.r7) return r7();
   if (r < currentRates.r7 + currentRates.r6) return r6();
   if (r < currentRates.r7 + currentRates.r6 + currentRates.r5) { p5=0; p4=0; return r5(); }
   if (r < currentRates.r7 + currentRates.r6 + currentRates.r5 + currentRates.r4) { p4=0; return r4(); }
-  
   return r3();
 }
 
@@ -890,29 +724,17 @@ function doRoll1(){
   tryFS(); setBtns(true); r10mode=false;
   hideBG(); videoLayer.classList.add('active');
   videoTap.classList.remove('active'); 
-
   const id=pickOne(); addOwned(id); save();
   const rar=rarityOf(id);
-
   preloadVideo(charSrc(id));
-
   phase='intro';
   _load(rollSrc(rar),
     function(ok){
-      if(ok){
-        VID.play().catch(()=>{});
-        skipTimer=setTimeout(()=>{if(phase==='intro')showSkip('▶▶ Skip');},800);
-      } else {
-        phase='idle'; playChar1(id);
-      }
+      if(ok){ VID.play().catch(()=>{}); skipTimer=setTimeout(()=>{if(phase==='intro')showSkip('▶▶ Skip');},800); } 
+      else { phase='idle'; playChar1(id); }
     },
-    function(){
-      hideSkip(); skipLk=false;
-      phase='idle'; playChar1(id);
-    },
-    function(t){
-      if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;}
-    }
+    function(){ hideSkip(); skipLk=false; phase='idle'; playChar1(id); },
+    function(t){ if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;} }
   );
 }
 
@@ -922,12 +744,8 @@ function applyDevRates() {
   currentRates.r5 = parseFloat(document.getElementById('dev-rate-5').value) || 0;
   currentRates.r6 = parseFloat(document.getElementById('dev-rate-6').value) || 0;
   currentRates.r7 = parseFloat(document.getElementById('dev-rate-7').value) || 0;
-
   const total = currentRates.r3 + currentRates.r4 + currentRates.r5 + currentRates.r6 + currentRates.r7;
-  if (Math.abs(total - 100) > 0.1) {
-    alert("⚠️ Lưu ý: Tổng tỉ lệ đang là " + total.toFixed(1) + "% (Khác 100%). Hệ thống sẽ tự chia theo tỷ trọng.");
-  }
-  
+  if (Math.abs(total - 100) > 0.1) { alert("⚠️ Lưu ý: Tổng tỉ lệ đang là " + total.toFixed(1) + "% (Khác 100%). Hệ thống sẽ tự chia theo tỷ trọng."); }
   const msg = document.getElementById('rate-msg');
   msg.style.display = 'block';
   setTimeout(() => msg.style.display = 'none', 2500);
@@ -937,20 +755,12 @@ function playChar1(id){
   videoLayer.classList.add('active');
   videoTap.classList.remove('active');
   phase='char'; skipLk=false;
-
   _load(charSrc(id),
     function(ok){
-      if(ok){
-         VID.play().catch(()=>{});
-         skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip');},800);
-      } else {
-         renderCollection();
-         phase='ended'; skipLk=false; showSkip('✕ Đóng');
-      }
+      if(ok){ VID.play().catch(()=>{}); skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip');},800); } 
+      else { renderCollection(); phase='ended'; skipLk=false; showSkip('✕ Đóng'); }
     },
-    function(){
-      phase='ended'; skipLk=false; showSkip('✕ Đóng');
-    }
+    function(){ phase='ended'; skipLk=false; showSkip('✕ Đóng'); }
   );
 }
 
@@ -959,65 +769,40 @@ function doRoll10(){
   tryFS(); setBtns(true); r10mode=true;
   hideBG(); videoLayer.classList.add('active');
   videoTap.classList.remove('active'); 
-
   try{summarySfx.volume=0;summarySfx.play().then(()=>{summarySfx.pause();summarySfx.currentTime=0;summarySfx.volume=1;}).catch(()=>{});}catch(e){}
-
   const res=pick10(); res.forEach(x=>addOwned(x)); save();
   r10sorted=[...res].sort((a,b)=>rarityOf(b)-rarityOf(a));
   r10queue=[...res]; 
-
   const topRar=rarityOf(r10sorted[0]);
-
   if(r10queue.length>0)preloadVideo(charSrc(r10queue[0]));
   if(r10queue.length>1)preloadVideo(charSrc(r10queue[1]));
-
   phase='intro';
   _load(rollSrc(topRar),
     function(ok){
-      if(ok){
-        VID.play().catch(()=>{});
-        skipTimer=setTimeout(()=>{if(phase==='intro')showSkip('▶▶ Skip All');},800);
-      } else {
-        phase='idle'; r10Next();
-      }
+      if(ok){ VID.play().catch(()=>{}); skipTimer=setTimeout(()=>{if(phase==='intro')showSkip('▶▶ Skip All');},800); } 
+      else { phase='idle'; r10Next(); }
     },
-    function(){
-      hideSkip(); skipLk=false; phase='idle';
-      videoTap.classList.add('active');
-      r10Next();
-    },
-    function(t){
-      if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;}
-    }
+    function(){ hideSkip(); skipLk=false; phase='idle'; videoTap.classList.add('active'); r10Next(); },
+    function(t){ if(t>=6.5&&phase==='intro'){hideSkip();skipLk=false;} }
   );
 }
 
 function r10Next(){
   if(r10queue.length===0){
-    videoTap.classList.remove('active');
-    videoLayer.classList.remove('active');
+    videoTap.classList.remove('active'); videoLayer.classList.remove('active');
     hideSkip(); phase='idle';
     const validSorted = r10sorted.filter(id => getCharList().includes(id));
     showSummary(validSorted); return;
   }
   const id=r10queue.shift();
   preloadNextInQueue(); 
-
   phase='char'; skipLk=false; hideSkip();
-  
   _load(charSrc(id),
     function(ok){
-      if(ok){
-        VID.play().catch(()=>{});
-        skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip All');},500);
-      } else {
-        r10Next(); 
-      }
+      if(ok){ VID.play().catch(()=>{}); skipTimer=setTimeout(()=>{if(phase==='char')showSkip('▶▶ Skip All');},500); } 
+      else { r10Next(); }
     },
-    function(){
-      phase='waiting';
-      showSkip('▶▶ Skip All');
-    }
+    function(){ phase='waiting'; showSkip('▶▶ Skip All'); }
   );
 }
 
@@ -1032,54 +817,23 @@ function onVideoTap(){
 
 function handleSkip(){
   if(skipLk)return;
-
-  if(phase==='intro'){
+  if(phase==='intro'||phase==='char'||phase==='waiting'){
     if(r10mode){
       skipLk=true; clearH(); if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       VID.pause(); r10queue=[];
-      videoTap.classList.remove('active');
-      videoLayer.classList.remove('active');
+      videoTap.classList.remove('active'); videoLayer.classList.remove('active');
       hideSkip(); phase='idle'; skipLk=false;
       const validSorted = r10sorted.filter(id => getCharList().includes(id));
       showSummary(validSorted);
     } else {
       skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
       hideSkip(); VID.pause();
-      VID.onseeked=function(){
-        VID.onseeked=null; skipLk=false;
-        VID.play().catch(()=>{});
-      };
+      VID.onseeked=function(){ VID.onseeked=null; skipLk=false; VID.style.opacity='1'; VID.play().catch(()=>{}); };
       VID.currentTime=6.5;
     }
     return;
   }
-
-  if(phase==='char'||phase==='waiting'){
-    if(r10mode){
-      skipLk=true; clearH();
-      if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
-      VID.pause(); r10queue=[];
-      videoTap.classList.remove('active');
-      videoLayer.classList.remove('active');
-      hideSkip(); phase='idle'; skipLk=false;
-      const validSorted = r10sorted.filter(id => getCharList().includes(id));
-      showSummary(validSorted);
-    } else {
-      skipLk=true; if(skipTimer){clearTimeout(skipTimer);skipTimer=null;}
-      hideSkip(); VID.pause();
-      VID.onseeked=function(){
-        VID.onseeked=null; skipLk=false;
-        VID.style.opacity='1';
-        VID.play().catch(()=>{});
-      };
-      VID.currentTime=6.5;
-    }
-    return;
-  }
-
-  if(phase==='ended'){
-    skipLk=true; closeVideo();
-  }
+  if(phase==='ended'){ skipLk=true; closeVideo(); }
 }
 
 let devClicks = 0;
@@ -1094,16 +848,12 @@ function hiddenDevTrigger() {
         if (code === "16052009") {
             isDev = true;
             document.getElementById('dev-rates-config').style.display = 'block'; 
-            
             pool3 = CHAR_DATABASE.filter(c => c.rar === 3).map(c => c.id);
             pool4 = CHAR_DATABASE.filter(c => c.rar === 4).map(c => c.id);
             pool5 = CHAR_DATABASE.filter(c => c.rar === 5).map(c => c.id);
             pool6 = CHAR_DATABASE.filter(c => c.rar === 6).map(c => c.id);
             pool7 = CHAR_DATABASE.filter(c => c.rar === 7).map(c => c.id);
-
-            syncDevInputs();
-            save();
-            renderCollection();
+            syncDevInputs(); save(); renderCollection();
             alert("✨ Kích hoạt Nhà phát triển! Bạn có thể click trực tiếp vào từng nhân vật trong bộ sưu tập để chọn sở hữu.");
         } else if (code !== null) {
             alert("❌ Mã xác thực không chính xác!");
@@ -1113,42 +863,24 @@ function hiddenDevTrigger() {
 }
 
 function syncDevInputs() {
-  const ip4 = document.getElementById('dev-p4-input');
-  const ip5 = document.getElementById('dev-p5-input');
-  const iroll = document.getElementById('dev-rolls-input');
-  if(ip4) ip4.value = p4;
-  if(ip5) ip5.value = p5;
-  if(iroll) iroll.value = rolls;
+  const ip4 = document.getElementById('dev-p4-input'), ip5 = document.getElementById('dev-p5-input'), iroll = document.getElementById('dev-rolls-input');
+  if(ip4) ip4.value = p4; if(ip5) ip5.value = p5; if(iroll) iroll.value = rolls;
 }
 
 function devOwnByRarity(rarity) {
-  CHAR_DATABASE.forEach(c => {
-    if (c.rar === rarity) {
-      owned[c.id] = MAX_DUP;
-    }
-  });
+  CHAR_DATABASE.forEach(c => { if (c.rar === rarity) owned[c.id] = MAX_DUP; });
   if (rarity === 6) got6 = true;
-  save();
-  renderCollection();
+  save(); renderCollection();
 }
 
-function devClearAllOwned() {
-  owned = {};
-  got6 = false;
-  got7 = false;
-  save();
-  renderCollection();
-}
+function devClearAllOwned() { owned = {}; got6 = false; got7 = false; save(); renderCollection(); }
 
 function devUpdateStats() {
-  const inp4 = parseInt(document.getElementById('dev-p4-input').value);
-  const inp5 = parseInt(document.getElementById('dev-p5-input').value);
-  const inRolls = parseInt(document.getElementById('dev-rolls-input').value);
+  const inp4 = parseInt(document.getElementById('dev-p4-input').value), inp5 = parseInt(document.getElementById('dev-p5-input').value), inRolls = parseInt(document.getElementById('dev-rolls-input').value);
   if(!isNaN(inp4)) p4 = Math.max(0, Math.min(inp4, PITY4));
   if(!isNaN(inp5)) p5 = Math.max(0, Math.min(inp5, PITY5));
   if(!isNaN(inRolls)) rolls = Math.max(0, inRolls);
-  save();
-  alert("✅ Cập nhật thông số thành công!");
+  save(); alert("✅ Cập nhật thông số thành công!");
 }
 
 function closeVideo(){
@@ -1166,19 +898,13 @@ function showSummary(sorted){
     const rar=rarityOf(id);
     const div=document.createElement('div');
     div.className='pill-card pill-r'+rar;
-    
-    div.onclick = function() {
-      openCharViewer(id, this);
-    };
+    div.onclick = function() { openCharViewer(id, this); };
 
     if(id === '51'){
       const remBtn = document.createElement('button');
       remBtn.className = 'remember-btn';
       remBtn.textContent = 'Remember';
-      remBtn.onclick = function(e){
-        e.stopPropagation();
-        window.location.href = 'album/index.html';
-      };
+      remBtn.onclick = function(e){ e.stopPropagation(); window.location.href = 'album/index.html'; };
       div.appendChild(remBtn);
     }
 
@@ -1194,7 +920,6 @@ function showSummary(sorted){
     rt.className='pill-rarity'; rt.textContent='★'.repeat(rar);
     div.appendChild(img); div.appendChild(rt);
     summaryPills.appendChild(div);
-    
     setTimeout(()=>div.classList.add('show'),60+i*85);
   });
 }
@@ -1214,44 +939,28 @@ function renderCollection(){
     div.onclick=function(){ 
       if(isDev) {
         let currentCnt = owned[id] || 0;
-        if(currentCnt === 0) {
-          owned[id] = 1;
-        } else if(currentCnt === 1) {
-          owned[id] = MAX_DUP;
-        } else {
-          delete owned[id];
-        }
+        if(currentCnt === 0) owned[id] = 1;
+        else if(currentCnt === 1) owned[id] = MAX_DUP;
+        else delete owned[id];
         got6 = pool6.some(x => (owned[x]||0) > 0);
-        save();
-        renderCollection();
+        save(); renderCollection();
       } else {
         openCharViewer(id,this); 
       }
     };
-
-    div.ondblclick=function(){
-      if(isDev && (owned[id]||0) > 0) {
-        openCharViewer(id,this);
-      }
-    };
+    div.ondblclick=function(){ if(isDev && (owned[id]||0) > 0) openCharViewer(id,this); };
 
     if(id === '51' && cnt > 0){
       const remBtn = document.createElement('button');
       remBtn.className = 'remember-btn';
       remBtn.textContent = 'Remember';
-      remBtn.onclick = function(e){
-        e.stopPropagation();
-        window.location.href = 'album/index.html';
-      };
+      remBtn.onclick = function(e){ e.stopPropagation(); window.location.href = 'album/index.html'; };
       div.appendChild(remBtn);
     }
 
     const img=document.createElement('img');
     img.alt=cnt>0?('ID:'+id):'???'; img.loading='lazy';
-
-    if(cnt===0){
-      img.style.cssText='filter:brightness(0);opacity:1;';
-    }
+    if(cnt===0) img.style.cssText='filter:brightness(0);opacity:1;';
 
     const char2Base=imgChar2Base(id);
     const char2Cached=char2FormatCache[id];
@@ -1259,17 +968,13 @@ function renderCollection(){
       img.src=char2Cached;
       img.onerror=function(){
         this.style.display='none';
-        const fb=document.createElement('div');
-        fb.className='pic-fallback';
-        fb.textContent=cnt>0?('ID:'+id):'???';
+        const fb=document.createElement('div'); fb.className='pic-fallback'; fb.textContent=cnt>0?('ID:'+id):'???';
         if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
         div.insertBefore(fb,div.firstChild);
       };
     } else {
       setImgPng(img,char2Base,function(){
-        const fb=document.createElement('div');
-        fb.className='pic-fallback';
-        fb.textContent=cnt>0?('ID:'+id):'???';
+        const fb=document.createElement('div'); fb.className='pic-fallback'; fb.textContent=cnt>0?('ID:'+id):'???';
         if(cnt===0) fb.style.cssText='filter:brightness(0);background:#000;color:#000;';
         div.insertBefore(fb,div.firstChild);
       });
@@ -1278,7 +983,6 @@ function renderCollection(){
     const rt=document.createElement('div'); rt.className='char-rarity';
     rt.textContent=cnt>0?'★'.repeat(rar):'✦';
     if(cnt===0) rt.style.color='#333';
-
     div.appendChild(img); div.appendChild(rt);
     if(cnt>0){const c=document.createElement('div');c.className='char-count';c.textContent=cnt>1?'x'+cnt:'✓';div.appendChild(c);}
     g.appendChild(div);
@@ -1290,45 +994,60 @@ function toggleCollection(){
   p.classList.contains('visible')?p.classList.remove('visible'):(renderCollection(),p.classList.add('visible'));
 }
 
+
+// --- LÕI ANIMATION MỚI ---
 const cvEl    = document.getElementById('char-viewer');
 const cvInner = document.getElementById('cv-inner');
 const cvVideo = document.getElementById('cv-video');
+const cvTransImg = document.getElementById('cv-transition-img');
 const cvRar   = document.getElementById('cv-rarity');
 const cvCnt   = document.getElementById('cv-count');
 const cvSpin  = document.getElementById('cv-spinner');
-let cvOpen = false, cvClosing = false;
+let cvOpen = false, cvClosing = false, activeCardEl = null;
 
 function openCharViewer(id, sourceEl){
   if(cvOpen || cvClosing) return;
   const cnt = owned[id]||0;
   if(cnt === 0) return;
   const rar = rarityOf(id);
+  activeCardEl = sourceEl;
 
   cvInner.className = 'glow-'+rar;
   cvRar.className   = 'cv-r'+rar;
   cvRar.textContent = '★'.repeat(rar) + ' ' + id;
   cvCnt.textContent = cnt > 1 ? '× '+cnt+' lần sở hữu' : '✓ Đã sở hữu';
 
-  if(sourceEl){
-    const rect = sourceEl.getBoundingClientRect();
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const cx = rect.left + rect.width/2 - vw/2;
-    const cy = rect.top  + rect.height/2 - vh/2;
-    const cvW = cvInner.offsetWidth || vw*0.78;
-    const ss  = Math.max(rect.width/cvW, 0.06);
-    cvInner.style.setProperty('--cv-sx', cx+'px');
-    cvInner.style.setProperty('--cv-sy', cy+'px');
-    cvInner.style.setProperty('--cv-ss', ss);
-  } else {
-    cvInner.style.setProperty('--cv-sx','0px');
-    cvInner.style.setProperty('--cv-sy','0px');
-    cvInner.style.setProperty('--cv-ss','.82');
-  }
-  cvInner.style.transition='';
+  const imgChild = sourceEl.querySelector('img');
+  cvTransImg.src = imgChild ? imgChild.src : imgSrcBase(id)+'.png';
+  cvTransImg.style.opacity = '1';
+
+  const rect = sourceEl.getBoundingClientRect();
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const targetW = Math.min(vw * 0.78, vh * 0.78 * (16/9));
+  const targetH = targetW * (9/16);
+  const targetX = (vw - targetW) / 2;
+  const targetY = (vh - targetH) / 2;
+
+  cvInner.style.transition = 'none';
+  cvInner.style.left = rect.left + 'px';
+  cvInner.style.top = rect.top + 'px';
+  cvInner.style.width = rect.width + 'px';
+  cvInner.style.height = rect.height + 'px';
+  cvInner.style.borderRadius = getComputedStyle(sourceEl).borderRadius || '8px';
 
   cvEl.style.display = 'flex';
-  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ cvEl.classList.add('open'); }); });
+  cvEl.classList.remove('open');
+  void cvInner.offsetWidth; 
+
   cvOpen = true;
+  cvInner.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+  cvEl.classList.add('open'); 
+
+  cvInner.style.left = targetX + 'px';
+  cvInner.style.top = targetY + 'px';
+  cvInner.style.width = targetW + 'px';
+  cvInner.style.height = targetH + 'px';
+  cvInner.style.borderRadius = '12px';
 
   cvSpin.classList.add('show');
   cvVideo.style.opacity = '0';
@@ -1347,6 +1066,7 @@ function openCharViewer(id, sourceEl){
       cvVideo.onseeked = null;
       cvSpin.classList.remove('show');
       cvVideo.style.opacity = '1';
+      cvTransImg.style.opacity = '0'; 
     };
     cvVideo.currentTime = 9.4;
   };
@@ -1356,22 +1076,39 @@ function closeCharViewer(){
   if(!cvOpen) return;
   cvOpen = false;
   cvClosing = true;
-  cvInner.style.transition='opacity .22s ease-in,transform .22s cubic-bezier(.4,0,.6,1)';
+
+  cvTransImg.style.opacity = '1';
+  cvVideo.style.opacity = '0';
+
+  let rect = { left: window.innerWidth/2, top: window.innerHeight/2, width: 0, height: 0 };
+  let currentRadius = '8px';
+  if (activeCardEl && activeCardEl.isConnected) {
+     rect = activeCardEl.getBoundingClientRect();
+     currentRadius = getComputedStyle(activeCardEl).borderRadius;
+  }
+
   cvEl.classList.remove('open');
+
+  cvInner.style.transition = 'all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1)';
+  cvInner.style.left = rect.left + 'px';
+  cvInner.style.top = rect.top + 'px';
+  cvInner.style.width = rect.width + 'px';
+  cvInner.style.height = rect.height + 'px';
+  cvInner.style.borderRadius = currentRadius;
+
   setTimeout(()=>{
     cvEl.style.display = 'none';
-    cvInner.style.transition='';
     cvVideo.pause(); cvVideo.src='';
-    cvVideo.style.opacity='0';
     cvSpin.classList.remove('show');
+    activeCardEl = null;
     cvClosing = false;
-  }, 240);
+  }, 350);
 }
 
 function cvClickOutside(e){
   if(e.target === cvEl) closeCharViewer();
 }
-document.addEventListener('touchmove',e=>{if(!e.target.closest('#col-grid'))e.preventDefault();},{passive:false});
+document.addEventListener('touchmove',e=>{if(!e.target.closest('#col-grid') && !e.target.closest('#summary-layer'))e.preventDefault();},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 </script>
 </body>
