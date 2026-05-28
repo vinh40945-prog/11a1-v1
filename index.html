@@ -977,8 +977,8 @@ function openCharViewer(id, sourceEl){
   cvRar.className = 'cv-r' + rar;
   cvRar.textContent = '★'.repeat(rar) + ' ' + id;
   cvCnt.textContent = cnt > 1 ? '× ' + cnt + ' lần sở hữu' : '✓ Đã sở hữu';
-  const imgChild = sourceEl.querySelector('img');
-  cvTransImg.src = imgChild ? imgChild.src : imgSrcBase(id)+'.png';
+  const imgChild = sourceEl.querySelector('img') || sourceEl;
+  cvTransImg.src = imgChild.src || imgSrcBase(id)+'.png';
   cvEl.style.display = 'block';
   const stageRect = document.getElementById('stage').getBoundingClientRect();
   const vw = stageRect.width, vh = stageRect.height;
@@ -986,8 +986,9 @@ function openCharViewer(id, sourceEl){
   currentTargetH = currentTargetW * (9/16);
   const targetX = (vw - currentTargetW) / 2;
   const targetY = (vh - currentTargetH) / 2;
+  sourceEl.style.opacity = '0';
   if (!cvOpen) {
-      const rect = sourceEl.getBoundingClientRect();
+      const rect = imgChild.getBoundingClientRect();
       const scaleX = rect.width / currentTargetW;
       const scaleY = rect.height / currentTargetH;
       cvInner.style.transition = 'none';
@@ -995,7 +996,7 @@ function openCharViewer(id, sourceEl){
       cvInner.style.height = currentTargetH + 'px';
       cvInner.style.transformOrigin = 'top left';
       cvInner.style.transform = `translate(${rect.left - stageRect.left}px, ${rect.top - stageRect.top}px) scale(${scaleX}, ${scaleY})`;
-      cvInner.style.borderRadius = (parseInt(getComputedStyle(sourceEl).borderRadius || 8) / scaleX) + 'px';
+      cvInner.style.borderRadius = (parseInt(getComputedStyle(imgChild).borderRadius || 4) / scaleX) + 'px';
       void cvInner.offsetWidth;
   }
   cvOpen = true;
@@ -1036,13 +1037,14 @@ function closeCharViewer(){
   const stageRect = document.getElementById('stage').getBoundingClientRect();
   let tx = stageRect.width/2 - currentTargetW/2;
   let ty = stageRect.height/2 - currentTargetH/2;
-  let currentRadius = '8px';
+  let currentRadius = '4px';
   let scaleX = 0, scaleY = 0;
   if (activeCardEl && activeCardEl.isConnected) {
-     const rect = activeCardEl.getBoundingClientRect();
+     const imgChild = activeCardEl.querySelector('img') || activeCardEl;
+     const rect = imgChild.getBoundingClientRect();
      tx = rect.left - stageRect.left;
      ty = rect.top - stageRect.top;
-     currentRadius = getComputedStyle(activeCardEl).borderRadius;
+     currentRadius = getComputedStyle(imgChild).borderRadius || '4px';
      scaleX = rect.width / currentTargetW;
      scaleY = rect.height / currentTargetH;
   } else {
@@ -1056,6 +1058,7 @@ function closeCharViewer(){
     cvEl.style.display = 'none';
     cvVideo.pause(); cvVideo.src='';
     cvSpin.classList.remove('show');
+    if (activeCardEl) activeCardEl.style.opacity = '';
     activeCardEl = null;
     cvClosing = false;
     document.getElementById('col-grid').style.overflow = '';
