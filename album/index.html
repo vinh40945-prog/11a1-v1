@@ -117,7 +117,7 @@
             z-index: 9998;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
 
         .zoom-overlay.active {
@@ -140,16 +140,21 @@
         document.addEventListener('DOMContentLoaded', () => {
             const wrapperEl = document.getElementById('album-wrapper');
             const overlayEl = document.getElementById('zoom-overlay');
-            const maxImages = 21;
+            const maxImages = 17;
             const folder = 'album/';
             
             let isZoomed = false;
             let activeClone = null;
             let originalTarget = null;
-            let startX = 0;
-            let currentX = 0;
-            let isDragging = false;
             let holdTimer = null;
+
+            let zPointers = [];
+            let zScale = 1;
+            let zPanX = 0, zPanY = 0;
+            let zBasePanX = 0, zBasePanY = 0;
+            let zBaseScale = 1;
+            let zStartX = 0, zStartY = 0;
+            let zIsDragging = false;
 
             function playSnippet(vid, forceMute = true) {
                 vid.currentTime = 0;
@@ -302,6 +307,15 @@
                 const img = card.querySelector('img');
                 if (!img || !img.classList.contains('loaded')) return;
 
+                zPointers = [];
+                zScale = 1;
+                zPanX = 0;
+                zPanY = 0;
+                zBasePanX = 0;
+                zBasePanY = 0;
+                zBaseScale = 1;
+                zIsDragging = false;
+
                 originalTarget = card;
                 const rect = card.getBoundingClientRect();
 
@@ -329,7 +343,7 @@
 
                 const target = calculateTargetSize(img);
 
-                activeClone.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                activeClone.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
                 Object.assign(activeClone.style, {
                     top: `${target.top}px`,
                     left: `${target.left}px`,
@@ -355,76 +369,121 @@
                 }
 
                 isZoomed = true;
-                activeClone.addEventListener('pointerdown', onPointerDown);
+                activeClone.addEventListener('pointerdown', onZPointerDown);
+                activeClone.addEventListener('pointermove', onZPointerMove);
+                activeClone.addEventListener('pointerup', onZPointerUp);
+                activeClone.addEventListener('pointercancel', onZPointerUp);
+                activeClone.addEventListener('wheel', onZWheel, { passive: false });
             };
 
-            const switchZoomSlide = (direction) => {
-                const oldClone = activeClone;
-                const oldTarget = originalTarget;
-                
-                let newIndex = window.albumSwiper.activeIndex + (direction === 'next' ? 1 : -1);
+            function applyZTransform() {
+                if (!activeClone) return;
+                activeClone.style.transform = `translate(${zPanX}px, ${zPanY}px) scale(${zScale})`;
+            }
 
-                if (newIndex < 0 || newIndex >= window.albumSwiper.slides.length) {
-                    oldClone.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
-                    oldClone.style.transform = 'translateX(0px)';
-                    return;
+            function onZPointerDown(e) {
+                zPointers.push({ id: e.pointerId, x: e.clientX, y: e.clientY });
+                if (zPointers.length === 1) {
+                    zStartX = e.clientX;
+                    zStartY = e.clientY;
+                    zIsDragging = true;
+                    activeClone.style.transition = 'none';
+                } else if (zPointers.length === 2) {
+                    zIsDragging = false;
+                    let d = Math.hypot(zPointers[0].x - zPointers[1].x, zPointers[0].y - zPointers[1].y);
+                    activeClone.dataset.startDist = d;
+                    zBaseScale = zScale;
+                    zBasePanX = zPanX;
+                    zBasePanY = zPanY;
+                }
+                activeClone.setPointerCapture(e.pointerId);
+            }
+
+            function onZPointerMove(e) {
+                let idx = zPointers.findIndex(p => p.id === e.pointerId);
+                if (idx > -1) {
+                    zPointers[idx].x = e.clientX;
+                    zPointers[idx].y = e.clientY;
                 }
 
-                const oldVid = oldClone.querySelector('video.live-video');
-                if (oldVid) oldVid.pause();
-
-                window.albumSwiper.slideTo(newIndex, 500);
-
-                oldClone.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                oldClone.style.opacity = '0';
-                oldClone.style.transform = `translateX(${direction === 'next' ? -window.innerWidth : window.innerWidth}px) scale(0.85)`;
-                setTimeout(() => oldClone.remove(), 400);
-
-                oldTarget.style.opacity = '1';
-
-                const newCard = window.albumSwiper.slides[newIndex].querySelector('.card-3d');
-                originalTarget = newCard;
-                newCard.style.opacity = '0';
-
-                activeClone = newCard.cloneNode(true);
-                
-                const img = newCard.querySelector('img');
-                const target = calculateTargetSize(img);
-
-                Object.assign(activeClone.style, {
-                    position: 'fixed',
-                    zIndex: '9999',
-                    top: `${target.top}px`,
-                    left: `${target.left}px`,
-                    width: `${target.width}px`,
-                    height: `${target.height}px`,
-                    margin: '0',
-                    cursor: 'grab',
-                    borderRadius: '4px',
-                    opacity: '0',
-                    transform: `translateX(${direction === 'next' ? window.innerWidth : -window.innerWidth}px) scale(0.85)`,
-                    transition: 'none',
-                    touchAction: 'none'
-                });
-
-                document.body.appendChild(activeClone);
-                activeClone.addEventListener('pointerdown', onPointerDown);
-
-                void activeClone.offsetWidth;
-
-                activeClone.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                activeClone.style.opacity = '1';
-                activeClone.style.transform = 'translateX(0px)';
-
-                const newVid = activeClone.querySelector('video.live-video');
-                if (newVid) {
-                    newVid.classList.add('playing');
-                    newVid.muted = false;
-                    newVid.loop = true;
-                    newVid.currentTime = 0;
-                    newVid.play().catch(() => {});
+                if (zPointers.length === 1 && zIsDragging) {
+                    if (zScale > 1) {
+                        zPanX = zBasePanX + (e.clientX - zStartX);
+                        zPanY = zBasePanY + (e.clientY - zStartY);
+                    } else {
+                        zPanX = e.clientX - zStartX;
+                        zPanY = e.clientY - zStartY;
+                    }
+                    applyZTransform();
+                } else if (zPointers.length === 2) {
+                    let d = Math.hypot(zPointers[0].x - zPointers[1].x, zPointers[0].y - zPointers[1].y);
+                    let startD = parseFloat(activeClone.dataset.startDist);
+                    if (startD) {
+                        zScale = Math.max(1, Math.min(zBaseScale * (d / startD), 5));
+                        if (zScale === 1) {
+                            zPanX = 0;
+                            zPanY = 0;
+                        }
+                        applyZTransform();
+                    }
                 }
-            };
+            }
+
+            function onZPointerUp(e) {
+                let isTap = false;
+                if (zPointers.length === 1 && zIsDragging) {
+                    if (Math.abs(e.clientX - zStartX) < 5 && Math.abs(e.clientY - zStartY) < 5) {
+                        isTap = true;
+                    }
+                }
+
+                zPointers = zPointers.filter(p => p.id !== e.pointerId);
+                try { activeClone.releasePointerCapture(e.pointerId); } catch(_) {}
+
+                if (zPointers.length === 0) {
+                    if (zScale === 1) {
+                        if (isTap || Math.abs(zPanX) > 60) {
+                            closeZoom();
+                        } else {
+                            zPanX = 0;
+                            zPanY = 0;
+                            activeClone.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
+                            applyZTransform();
+                            setTimeout(() => {
+                                if (activeClone) activeClone.style.transition = 'none';
+                            }, 300);
+                        }
+                    } else {
+                        zBasePanX = zPanX;
+                        zBasePanY = zPanY;
+                        zBaseScale = zScale;
+                    }
+                    zIsDragging = false;
+                } else if (zPointers.length === 1) {
+                    zStartX = zPointers[0].x;
+                    zStartY = zPointers[0].y;
+                    zBasePanX = zPanX;
+                    zBasePanY = zPanY;
+                    zIsDragging = true;
+                }
+            }
+
+            function onZWheel(e) {
+                e.preventDefault();
+                let zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+                zScale = Math.max(1, Math.min(zScale * zoomFactor, 5));
+                if (zScale === 1) {
+                    zPanX = 0;
+                    zPanY = 0;
+                    zBasePanX = 0;
+                    zBasePanY = 0;
+                }
+                activeClone.style.transition = 'transform 0.1s ease-out';
+                applyZTransform();
+                setTimeout(() => {
+                    if (activeClone) activeClone.style.transition = 'none';
+                }, 100);
+            }
 
             const closeZoom = () => {
                 if (!isZoomed || !activeClone || !originalTarget) return;
@@ -441,96 +500,23 @@
                 const cloneVid = localClone.querySelector('video.live-video');
                 if (cloneVid) cloneVid.pause();
 
-                const startRect = localClone.getBoundingClientRect();
-                const startRadius = parseFloat(window.getComputedStyle(localClone).borderRadius) || 4;
-
+                localClone.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                const targetRect = localTarget.getBoundingClientRect();
+                
                 Object.assign(localClone.style, {
-                    transition: 'none',
-                    pointerEvents: 'none',
-                    transform: 'none', 
-                    top: `${startRect.top}px`,
-                    left: `${startRect.left}px`,
-                    width: `${startRect.width}px`,
-                    height: `${startRect.height}px`
+                    transform: 'scale(1) translate(0px, 0px)',
+                    top: `${targetRect.top}px`,
+                    left: `${targetRect.left}px`,
+                    width: `${targetRect.width}px`,
+                    height: `${targetRect.height}px`,
+                    borderRadius: '16px'
                 });
 
-                let startTime = null;
-                const duration = 450;
-
-                const animateClose = (now) => {
-                    if (!startTime) startTime = now;
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const ease = 1 - Math.pow(1 - progress, 3);
-
-                    const targetRect = localTarget.getBoundingClientRect();
-
-                    Object.assign(localClone.style, {
-                        top: `${startRect.top + (targetRect.top - startRect.top) * ease}px`,
-                        left: `${startRect.left + (targetRect.left - startRect.left) * ease}px`,
-                        width: `${startRect.width + (targetRect.width - startRect.width) * ease}px`,
-                        height: `${startRect.height + (targetRect.height - startRect.height) * ease}px`,
-                        borderRadius: `${startRadius + (16 - startRadius) * ease}px`
-                    });
-
-                    if (progress < 1) {
-                        requestAnimationFrame(animateClose);
-                    } else {
-                        localTarget.style.opacity = '1';
-                        localClone.remove();
-                    }
-                };
-                
-                requestAnimationFrame(animateClose);
+                setTimeout(() => {
+                    localTarget.style.opacity = '1';
+                    localClone.remove();
+                }, 400);
             };
-
-            function onPointerDown(e) {
-                startX = e.clientX;
-                currentX = startX;
-                isDragging = true;
-                activeClone.style.transition = 'none';
-                activeClone.style.cursor = 'grabbing';
-                activeClone.setPointerCapture(e.pointerId);
-                
-                activeClone.addEventListener('pointermove', onPointerMove);
-                activeClone.addEventListener('pointerup', onPointerUp);
-                activeClone.addEventListener('pointercancel', onPointerUp);
-            }
-
-            function onPointerMove(e) {
-                if (!isDragging) return;
-                currentX = e.clientX;
-                const deltaX = currentX - startX;
-
-                activeClone.style.transform = `translateX(${deltaX}px)`;
-            }
-
-            function onPointerUp(e) {
-                if (!isDragging) return;
-                isDragging = false;
-                activeClone.style.cursor = 'grab';
-                activeClone.releasePointerCapture(e.pointerId);
-                
-                activeClone.removeEventListener('pointermove', onPointerMove);
-                activeClone.removeEventListener('pointerup', onPointerUp);
-                activeClone.removeEventListener('pointercancel', onPointerUp);
-
-                const deltaX = currentX - startX;
-                const swipeThreshold = window.innerWidth * 0.15; 
-
-                if (deltaX < -swipeThreshold) {
-                    switchZoomSlide('next'); 
-                } else if (deltaX > swipeThreshold) {
-                    switchZoomSlide('prev'); 
-                } else {
-                    activeClone.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
-                    activeClone.style.transform = 'translateX(0px)';
-
-                    if (Math.abs(deltaX) < 4) {
-                        closeZoom();
-                    }
-                }
-            }
 
             window.albumSwiper.on('click', (swiper, e) => {
                 if (isZoomed) return;
